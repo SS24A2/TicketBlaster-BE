@@ -13,17 +13,6 @@ const AccountLogin = {
   password: "required|string",
 };
 
-const AccountUpdate = {
-  fullname: "string",
-  email: "email",
-  password: "string",
-  confirmPassword: "string",
-};
-
-const AccountRoleUpdate = {
-  role: "string|in:user,admin"
-};
-
 const AccountForgotPassword = {
   email: "required|email"
 };
@@ -32,6 +21,20 @@ const AccountChangePassword = {
   password: "required|string",
   confirmPassword: "required|string",
 };
+
+const AccountUpdateDetails = {
+  fullname: "required|string",
+  email: "required|email",
+};
+
+const AccountRoleUpdate = {
+  role: "required|string|in:user,admin"
+};
+
+const AccountStatusUpdate = {
+  status: "required|string|in:active,deleted"
+};
+
 
 const validateAccount = async (data, schema) => {
   const validator = new Validator(data, schema);
@@ -48,9 +51,10 @@ const validateAccount = async (data, schema) => {
 module.exports = {
   AccountRegister,
   AccountLogin,
-  AccountUpdate,
-  AccountRoleUpdate,
+  AccountUpdateDetails,
   AccountForgotPassword,
   AccountChangePassword,
+  AccountRoleUpdate,
+  AccountStatusUpdate,
   validateAccount,
 };

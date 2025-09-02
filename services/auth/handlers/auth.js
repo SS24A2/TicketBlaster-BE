@@ -16,6 +16,11 @@ const login = async (req, res) => {
       return res.status(400).send("Incorrect email address or password!");
     }
 
+    //TBC
+    if (existingUser.userStatus === "deleted") {
+      return res.status(400).send("Cannot log in! Your profile is inactive!");
+    }
+
     const payload = {
       fullname: existingUser.fullname,
       email: email,
@@ -63,6 +68,11 @@ const forgotPassword = async (req, res) => {
 
     if (!user) {
       return res.status(400).send("User not found!");
+    }
+
+    //TBC
+    if (user.userStatus === "deleted") {
+      return res.status(400).send("Your profile is inactive!");
     }
 
     const secret = config.getSection("security").jwt_secret + user.password;
