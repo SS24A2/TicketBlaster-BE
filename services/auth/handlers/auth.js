@@ -25,6 +25,8 @@ const login = async (req, res) => {
       fullname: existingUser.fullname,
       email: email,
       id: existingUser._id,
+      role: existingUser.role,
+      status: existingUser.status
     }
     //req.auth contains the payload data (req.auth.fullname, req.auth.email, req.auth.id)
 
@@ -80,6 +82,8 @@ const forgotPassword = async (req, res) => {
       fullname: user.fullname,
       email: user.email,
       id: user._id,
+      role: user.role,
+      status: user.status
     };
 
     const token = jwt.sign(payload, secret, { expiresIn: "15m" });

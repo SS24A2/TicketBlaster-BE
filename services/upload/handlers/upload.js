@@ -18,7 +18,7 @@ const upload = async (req, res) => {
     }
 
     const uploadType = req.params.type
-    const DirPath = `${__dirname}/../../../uploads/${uploadType}s`;
+    const DirPath = `${__dirname}/../../${uploadType}s/uploads`;
 
     if (!fs.existsSync(DirPath)) {
       fs.mkdirSync(DirPath);
