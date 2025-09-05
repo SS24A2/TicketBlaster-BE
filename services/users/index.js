@@ -9,8 +9,6 @@ db.init();
 const api = express();
 api.use(express.json());
 
-api.use(express.static('uploads'))
-
 api.get("/api/v1/users/list", listAllUsers);
 api.put("/api/v1/users/role/:id", changeUserRole);
 api.put("/api/v1/users/status/:id", deleteUser);

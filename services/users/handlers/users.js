@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const fs = require("fs");
 
 const { AccountUpdateDetails, AccountChangePassword, validateAccount, AccountRoleUpdate } = require("../../../pkg/users/validate");
 const { getOneUser, updateUser, getAllUsers } = require("../../../pkg/users");
@@ -6,14 +7,27 @@ const { getOneUser, updateUser, getAllUsers } = require("../../../pkg/users");
 
 const listAllUsers = async (req, res) => {
     try {
-        const account = await getOneUser({ _id: req.auth.id })
+        const account = await getOneUser({ _id: req.headers.id })
 
         if (!account || account.role !== "admin" || account.status === "deleted") {
             return res.status(400).send("Unauthorized!");
         }
 
+        const DirPath = `${__dirname}/../../../uploads_users`;
+        const filesList = fs.readdirSync(DirPath)
+
         const users = await getAllUsers()
-        return res.status(200).send({ users }); //TBC
+        const images = {} // key=user._id; value=img name
+
+        for (let user of users) {
+            let imgSrc = null
+            if (filesList.length > 0) {
+                imgSrc = filesList.find(item => item.slice(0, 24) === user._id.toString()) || null
+            }
+            images[user._id] = imgSrc
+        }
+
+        return res.status(200).send({ users, images }); //TBC
     } catch (err) {
         console.error(err);
         return res.status(500).send("Internal Server Error!"); //TBC
@@ -22,7 +36,7 @@ const listAllUsers = async (req, res) => {
 
 const changeUserRole = async (req, res) => {
     try {
-        const account = await getOneUser({ _id: req.auth.id })
+        const account = await getOneUser({ _id: req.headers.id })
 
         if (!account || account.role !== "admin" || account.status === "deleted") {
             return res.status(400).send("Unauthorized!");
@@ -52,7 +66,7 @@ const changeUserRole = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        const account = await getOneUser({ _id: req.auth.id })
+        const account = await getOneUser({ _id: req.headers.id })
 
         if (!account || account.role !== "admin" || account.status === "deleted") {
             return res.status(400).send("Unauthorized!");
@@ -82,7 +96,7 @@ const changeProfileInfo = async (req, res) => {
         await validateAccount(req.body, AccountUpdateDetails)
         const { fullname, email } = req.body
 
-        const account = await getOneUser({ _id: req.auth.id })
+        const account = await getOneUser({ _id: req.headers.id })
 
         if (!account || account.status !== "deleted") {
             return res.status(400).send("User not found!");
@@ -107,7 +121,7 @@ const changePassword = async (req, res) => {
             return res.status(400).send("Passwords do not match!");
         }
 
-        const account = await getOneUser({ _id: req.auth.id })
+        const account = await getOneUser({ _id: req.headers.id })
 
         if (!account || account.status !== "deleted") {
             return res.status(400).send("User not found!");

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"node ./services/proxy/index.js\" \"node ./services/auth/index.js\" \"node ./services/storage/index.js\" \"node ./services/posts/index.js\" \"node ./services/cars/index.js\""
+    "start": "concurrently \"node ./services/proxy/index.js\" \"node ./services/auth/index.js\" \"node ./services/upload/index.js\" \"node ./services/events/index.js\" \"node ./services/ecommerce/index.js\" \"node ./services/users/index.js\""
   },
   "keywords": [],
   "author": "",

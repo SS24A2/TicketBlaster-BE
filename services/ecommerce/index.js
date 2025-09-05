@@ -2,27 +2,26 @@ const express = require("express");
 
 const config = require("../../pkg/config");
 const db = require("../../pkg/db");
-const posts = require("./handlers/ecommerce");
+// const cars = require("./handlers/events");
 
 db.init();
 
 const api = express();
 api.use(express.json())
 
-api.get("/api/v1/posts", posts.getAll);
-api.get("/api/v1/posts/:id", posts.getSingle);
-api.post("/api/v1/posts", posts.create);
-api.put("/api/v1/posts/:id", posts.update);
-api.delete("/api/v1/posts/:id", posts.remove);
+// api.get("/api/v1/cars", cars.getVehicle);
+// api.post("/api/v1/cars", cars.createVehicle);
+// api.put("/api/v1/cars/:id", cars.updateVehicle);
+// api.delete("/api/v1/cars/:id", cars.removeVehicle);
 
-// Port 10003
-api.listen(config.getSection("services").posts.port, (err) => {
+// Port 10004
+api.listen(config.getSection("services").ecommerce.port, (err) => {
   if (err) {
     console.log("error", err);
     return;
   }
   console.log(
-    "Service [posts] successfully started on port",
-    config.getSection("services").posts.port
+    "Service [ecommerce] successfully started on port",
+    config.getSection("services").ecommerce.port
   );
 });

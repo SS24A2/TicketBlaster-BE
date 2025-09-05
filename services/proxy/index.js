@@ -9,6 +9,11 @@ const app = express();
 
 app.use(cors({ origin: "http://localhost:5173" }));
 
+
+app.use(express.static('uploads_events'))
+app.use(express.static('uploads_users'))
+
+// TBC
 app.use(
   jwt({
     secret: config.getSection("security").jwt_secret,
@@ -17,7 +22,6 @@ app.use(
     path: [
       "/api/v1/auth/login",
       "/api/v1/auth/register",
-      "/api/v1/auth/refreshToken",
       "/api/v1/auth/forgotPassword",
       "/api/v1/auth/resetPassword"
     ],
@@ -26,29 +30,29 @@ app.use(
 
 app.use(function (err, req, res, next) {
   if (err.name === "UnauthorizedError") {
-    res.status(401).send("Invalid token...");
+    res.status(401).send(`Invalid token...${err}`);
   } else {
     next(err);
   }
 });
 
 app.use(
-  "/api/v1/storage",
+  "/api/v1/upload",
   proxy("http://127.0.0.1:10001", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
       proxyReqOpts.headers.id = srcReq.auth.id;
       return proxyReqOpts;
     },
-    limit: '5mb',
+    limit: '10mb', //same as in upload handlers
     proxyReqPathResolver: (req) => {
-      const path = `/api/v1/storage${req.url}`;
+      const path = `/api/v1/upload${req.url}`;
       console.log("[Proxy] Forwarding to:", path);
       console.log("reqUrl", req.url)
       return path;
     },
   })
 );
-// http://localhost:3000/api/v1/storage
+// http://localhost:8080/api/v1/upload
 
 app.use(
   "/api/v1/auth",
@@ -61,34 +65,34 @@ app.use(
     },
   })
 );
-// http://localhost:3000/api/v1/auth
+// http://localhost:8080/api/v1/auth
 
 app.use(
-  "/api/v1/posts",
+  "/api/v1/ecommerce",
   proxy("http://127.0.0.1:10003", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
       proxyReqOpts.headers.id = srcReq.auth.id;
       return proxyReqOpts;
     },
     proxyReqPathResolver: (req) => {
-      const path = `/api/v1/posts${req.url}`;
+      const path = `/api/v1/ecommerce${req.url}`;
       console.log("[Proxy] Forwarding to:", path);
       console.log("reqUrl", req.url)
       return path;
     },
   })
 );
-// http://localhost:3000/api/v1/posts
+// http://localhost:8080/api/v1/ecommerce
 
 app.use(
-  "/api/v1/cars",
+  "/api/v1/events",
   proxy("http://127.0.0.1:10004", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
       proxyReqOpts.headers.id = srcReq.auth.id;
       return proxyReqOpts;
     },
     proxyReqPathResolver: (req) => {
-      const path = `/api/v1/cars${req.url}`;
+      const path = `/api/v1/events${req.url}`;
       console.log("[Proxy] Forwarding to:", path);
       console.log("reqUrl", req.url)
       return path;
@@ -96,14 +100,31 @@ app.use(
   })
 );
 
-// http://localhost:3000/api/v1/cars
+// http://localhost:8080/api/v1/events
 
-const PORT = process.env.PORT || config.getSection("services").proxy.port;
 
-app.listen(PORT, (err) => {
+app.use(
+  "/api/v1/users",
+  proxy("http://127.0.0.1:10005", {
+    proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
+      proxyReqOpts.headers.id = srcReq.auth.id;
+      return proxyReqOpts;
+    },
+    proxyReqPathResolver: (req) => {
+      const path = `/api/v1/users${req.url}`;
+      console.log("[Proxy] Forwarding to:", path);
+      console.log("reqUrl", req.url)
+      return path;
+    },
+  })
+);
+
+// http://localhost:8080/api/v1/users
+
+app.listen(config.getSection("services").proxy.port, (err) => {
   if (err) {
     console.log(err);
     return err;
   }
-  console.log("Service [proxy] successfully started on port", PORT);
+  console.log("Service [proxy] successfully started on port", config.getSection("services").proxy.port);
 });

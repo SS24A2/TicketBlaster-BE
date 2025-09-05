@@ -18,7 +18,7 @@ const upload = async (req, res) => {
     }
 
     const uploadType = req.params.type
-    const DirPath = `${__dirname}/../../${uploadType}s/uploads`;
+    const DirPath = `${__dirname}/../../../uploads_${uploadType}s`;
 
     if (!fs.existsSync(DirPath)) {
       fs.mkdirSync(DirPath);
@@ -31,8 +31,12 @@ const upload = async (req, res) => {
 
     // deleting the previously uploaded image when a new image is uploaded (for the same user/event)
     const filesList = fs.readdirSync(DirPath)
-    const previousFile = filesList.filter((item) => item.slice(0, 6) === uploadObjectId)[0]
-    fs.rmSync(`${DirPath}/${previousFile}`)
+    if (filesList.length > 0) {
+      const previousFile = filesList.find((item) => item.slice(0, 24) === uploadObjectId)
+      if (previousFile) {
+        fs.rmSync(`${DirPath}/${previousFile}`)
+      }
+    }
 
     await req.files.image.mv(filePath);
     return res.status(200).send({ filename: newFileNameUnique });
@@ -45,7 +49,3 @@ const upload = async (req, res) => {
 module.exports = {
   upload,
 };
-
-/////TO DO
-// the filesize should be specified also in the proxy service if it is larger than the default one
-// slice (0,24) in case of Object Id!!!!
