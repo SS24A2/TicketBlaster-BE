@@ -2,7 +2,7 @@ const express = require("express");
 
 const config = require("../../pkg/config");
 const db = require("../../pkg/db");
-const { listAllUsers, changeUserRole, deleteUser, changeProfileInfo, changePassword } = require("./handlers/users");
+const { listAllUsers, changeUserRole, deleteUser, changeProfileInfo, changePassword, getUser } = require("./handlers/users");
 
 db.init();
 
@@ -12,6 +12,8 @@ api.use(express.json());
 api.get("/api/v1/users/list", listAllUsers);
 api.put("/api/v1/users/role/:id", changeUserRole);
 api.put("/api/v1/users/status/:id", deleteUser);
+
+api.get("/api/v1/users/user", getUser);
 api.put("/api/v1/users/details", changeProfileInfo);
 api.put("/api/v1/users/password", changePassword);
 

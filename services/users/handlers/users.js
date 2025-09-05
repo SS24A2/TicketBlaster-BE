@@ -34,6 +34,30 @@ const listAllUsers = async (req, res) => {
     }
 };
 
+const getUser = async (req, res) => {
+    try {
+        const user = await getOneUser({ _id: req.headers.id })
+
+        if (!user || user.status === "deleted") {
+            return res.status(400).send("Unauthorized!");
+        }
+
+        const DirPath = `${__dirname}/../../../uploads_users`;
+        const filesList = fs.readdirSync(DirPath)
+
+        let image = null
+
+        if (filesList.length > 0) {
+            image = filesList.find(item => item.slice(0, 24) === user._id.toString()) || null
+        }
+
+        return res.status(200).send({ user, image }); //TBC
+    } catch (err) {
+        console.error(err);
+        return res.status(500).send("Internal Server Error!"); //TBC
+    }
+};
+
 const changeUserRole = async (req, res) => {
     try {
         const account = await getOneUser({ _id: req.headers.id })
@@ -141,5 +165,6 @@ module.exports = {
     changeUserRole,
     deleteUser,
     changeProfileInfo,
-    changePassword
+    changePassword,
+    getUser
 };
