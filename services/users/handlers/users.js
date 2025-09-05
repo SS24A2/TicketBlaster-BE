@@ -90,7 +90,7 @@ const deleteUser = async (req, res) => {
     }
 };
 
-//should include change in profile image
+
 const changeProfileInfo = async (req, res) => {
     try {
         await validateAccount(req.body, AccountUpdateDetails)
@@ -98,7 +98,7 @@ const changeProfileInfo = async (req, res) => {
 
         const account = await getOneUser({ _id: req.headers.id })
 
-        if (!account || account.status !== "deleted") {
+        if (!account || account.status === "deleted") {
             return res.status(400).send("User not found!");
         }
 
@@ -123,7 +123,7 @@ const changePassword = async (req, res) => {
 
         const account = await getOneUser({ _id: req.headers.id })
 
-        if (!account || account.status !== "deleted") {
+        if (!account || account.status === "deleted") {
             return res.status(400).send("User not found!");
         }
 

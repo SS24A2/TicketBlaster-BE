@@ -12,8 +12,8 @@ api.use(express.json());
 api.get("/api/v1/users/list", listAllUsers);
 api.put("/api/v1/users/role/:id", changeUserRole);
 api.put("/api/v1/users/status/:id", deleteUser);
-api.put("/api/v1/account/details", changeProfileInfo);
-api.put("/api/v1/account/password", changePassword);
+api.put("/api/v1/users/details", changeProfileInfo);
+api.put("/api/v1/users/password", changePassword);
 
 api.listen(config.getSection("services").users.port, (err) => {
     if (err) {
