@@ -2,17 +2,19 @@ const express = require("express");
 
 const config = require("../../pkg/config");
 const db = require("../../pkg/db");
-// const cars = require("./handlers/events");
+
+const { postEvent, getEvents, getEvent, putEvent, deleteOneEvent } = require("./handlers/events");
 
 db.init();
 
 const api = express();
 api.use(express.json())
 
-// api.get("/api/v1/cars", cars.getVehicle);
-// api.post("/api/v1/cars", cars.createVehicle);
-// api.put("/api/v1/cars/:id", cars.updateVehicle);
-// api.delete("/api/v1/cars/:id", cars.removeVehicle);
+api.get("/api/v1/events", getEvents);
+api.get("/api/v1/events/:id", getEvent);
+api.post("/api/v1/events", postEvent);
+api.put("/api/v1/events/:id", putEvent);
+api.delete("/api/v1/events/:id", deleteOneEvent);
 
 // Port 10004
 api.listen(config.getSection("services").events.port, (err) => {

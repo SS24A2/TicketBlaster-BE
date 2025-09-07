@@ -10,6 +10,7 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['Musical Concert', 'Stand-up Comedy'],
+        message: '{VALUE} is not a supported category. Please choose Musical Concert or Stand-up Comedy.'
     },
     date: {
         type: Date,
@@ -44,17 +45,23 @@ const createEvent = async (data) => {
         return res
     } catch (err) {
         console.error(err)
+        throw err
     }
 }
 
 
 //***GET
-const getAllEvents = async (filterObject) => {
+const getAllEvents = async (filterObject, sortObj, page, pageSize) => {
     try {
         const res = await EventModel.find(filterObject)
+            .sort(sortObj)
+            .skip((page - 1) * pageSize)
+            .limit(pageSize)
+
         return res
     } catch (err) {
         console.error(err)
+        throw err
     }
 }
 
@@ -64,6 +71,7 @@ const getOneEvent = async (filterObject) => {
         return res
     } catch (err) {
         console.error(err)
+        throw err
     }
 }
 
@@ -71,10 +79,11 @@ const getOneEvent = async (filterObject) => {
 //***PUT
 const updateEvent = async (id, data) => {
     try {
-        const res = await EventModel.updateOne({ _id: id }, data)
+        const res = await EventModel.updateOne({ _id: id }, data, { runValidators: true })
         return res
     } catch (err) {
         console.error(err)
+        throw err
     }
 }
 
@@ -85,6 +94,7 @@ const deleteEvent = async (id) => {
         return res
     } catch (err) {
         console.error(err)
+        throw err
     }
 }
 

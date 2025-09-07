@@ -23,8 +23,10 @@ app.use(
       "/api/v1/auth/login",
       "/api/v1/auth/register",
       "/api/v1/auth/forgotPassword",
-      "/api/v1/auth/resetPassword"
-    ],
+      "/api/v1/auth/resetPassword",
+      { url: '/api/v1/events', methods: ['GET'] },
+      { url: /^\/api\/v1\/events\/.*/, methods: ['GET'] }
+    ]
   })
 );
 
@@ -40,7 +42,7 @@ app.use(
   "/api/v1/upload",
   proxy("http://127.0.0.1:10001", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-      proxyReqOpts.headers.id = srcReq.auth.id;
+      proxyReqOpts.headers = { ...proxyReqOpts.headers, ...srcReq.auth };
       return proxyReqOpts;
     },
     limit: '10mb', //same as in upload handlers
@@ -71,7 +73,7 @@ app.use(
   "/api/v1/ecommerce",
   proxy("http://127.0.0.1:10003", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-      proxyReqOpts.headers.id = srcReq.auth.id;
+      proxyReqOpts.headers = { ...proxyReqOpts.headers, ...srcReq.auth };
       return proxyReqOpts;
     },
     proxyReqPathResolver: (req) => {
@@ -88,7 +90,7 @@ app.use(
   "/api/v1/events",
   proxy("http://127.0.0.1:10004", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-      proxyReqOpts.headers.id = srcReq.auth.id;
+      proxyReqOpts.headers = { ...proxyReqOpts.headers, ...srcReq.auth };
       return proxyReqOpts;
     },
     proxyReqPathResolver: (req) => {
@@ -107,7 +109,7 @@ app.use(
   "/api/v1/users",
   proxy("http://127.0.0.1:10005", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
-      proxyReqOpts.headers.id = srcReq.auth.id;
+      proxyReqOpts.headers = { ...proxyReqOpts.headers, ...srcReq.auth };
       return proxyReqOpts;
     },
     proxyReqPathResolver: (req) => {

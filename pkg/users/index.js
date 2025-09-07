@@ -17,12 +17,14 @@ const userSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['user', 'admin'],
-    default: "user"
+    default: "user",
+    message: '{VALUE} is not a supported role. Please choose user or admin.'
   },
   status: {
     type: String,
     enum: ['active', 'deleted'],
-    default: "active"
+    default: "active",
+    message: '{VALUE} is not a supported status. Please choose active or deleted.'
   }
 }, { timestamps: true });
 
@@ -37,6 +39,7 @@ const createUser = async (data) => {
     return res
   } catch (err) {
     console.error(err)
+    throw err
   }
 }
 
@@ -48,6 +51,7 @@ const getAllUsers = async () => {
     return res
   } catch (err) {
     console.error(err)
+    throw err
   }
 }
 
@@ -57,6 +61,7 @@ const getOneUser = async (filterObject) => {
     return res
   } catch (err) {
     console.error(err)
+    throw err
   }
 }
 
@@ -64,10 +69,11 @@ const getOneUser = async (filterObject) => {
 //***PUT
 const updateUser = async (id, data) => {
   try {
-    const res = await UserModel.updateOne({ _id: id }, data)
+    const res = await UserModel.updateOne({ _id: id }, data, { runValidators: true })
     return res
   } catch (err) {
     console.error(err)
+    throw err
   }
 }
 
@@ -78,6 +84,7 @@ const deleteUser = async (id) => {
     return res
   } catch (err) {
     console.error(err)
+    throw err
   }
 }
 
