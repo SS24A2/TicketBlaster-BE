@@ -51,10 +51,10 @@ const createEvent = async (data) => {
 
 
 //***GET
-const getAllEvents = async (filterObject, sortObj, page, pageSize) => {
+const getAllEvents = async ({ filterObject, sortObject, page, pageSize }) => {
     try {
         const res = await EventModel.find(filterObject)
-            .sort(sortObj)
+            .sort(sortObject)
             .skip((page - 1) * pageSize)
             .limit(pageSize)
 

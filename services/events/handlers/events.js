@@ -24,63 +24,41 @@ const postEvent = async (req, res) => {
 
 const getEvents = async (req, res) => {
     try {
-        // const timeNow = new Date()
+        const sortObject = { date: 1 } // rezultati podredeni od najskoreshni do najdalecni po datum na event-ot
+        let { category, search, excludedId, page, pageSize } = req.query
 
-        const response = await getAllEvents(num5.filterObj, num5.sortObj, num5.page, num5.pageSize)
+        page = parseInt(page) || 1;
+        pageSize = parseInt(pageSize) || 10;
+        if (page < 1) page = 1;
+        if (pageSize < 1) pageSize = 1;
 
-        return res.status(200).send(response)
+        const dateNow = new Date()
+        let filterObject = {}
+        if (excludedId) {
+            filterObject._id = { $ne: excludedId }
+        }
+        if (category) {
+            filterObject.category = category
+        }
+        if (search) {
+            filterObject = { ...filterObject, $or: [{ name: { $regex: `(?i)${search}(?-i)` } }, { details: { $regex: `(?i)${search}(?-i)` } }] }
+        }
+        filterObject.date = { $gte: dateNow }
+        console.log("filter", filterObject)
+        console.log("page", page, pageSize)
+        console.log("sort", sortObject)
+
+        const events = await getAllEvents({ filterObject, sortObject, page, pageSize })
+
+        return res.status(200).send(events)
     } catch (err) {
         console.error(err);
+        if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
+            return res.status(400).send("Invalid ObjectId format in the url")
+        }
         return res.status(500).send("Internal server error")
     }
 }
-
-//Num1 - 5 koncerti od pobliski do podalecni, nikoj da ne e zavrshen/pominat i ne zemaj vo predvid concert objaven kako glaven; istoto za komedii
-const timeNow = new Date()
-const num1 = {
-    filterObj: { date: { $gte: timeNow }, _id: { $ne: "68bcc56e29d5394a0dab18d3" }, category: "Stand-up Comedy" },
-    sortObj: { date: 1 },
-    page: 1,
-    pageSize: 5
-}
-
-
-//Num2 - glavniot najskoreshen nastan 
-const num2 = {
-    filterObj: { date: { $gte: timeNow } },
-    sortObj: { date: 1 },
-    page: 1,
-    pageSize: 1
-}
-
-
-//Num3 - stranica za koncerti ili komedii - inicijalen fetch
-const num3 = {
-    filterObj: { date: { $gte: timeNow }, category: "Musical Concert" },
-    sortObj: { date: 1 },
-    page: 1,
-    pageSize: 20
-}
-
-
-//Num4 - stranica za koncerti ili komedii - fetch na Load More kopce
-const num4 = {
-    filterObj: { date: { $gte: timeNow }, category: "Musical Concert" },
-    sortObj: { date: 1 },
-    page: 3,
-    pageSize: 10
-}
-
-
-//Num5 - search rezultati 
-const num5 = {
-    filterObj: { date: { $gte: timeNow }, $or: [{ name: { $regex: "(?i)nam(?-i)" } }, { details: { $regex: "(?i)det(?-i)" } }] },
-    sortObj: { date: 1 },
-    page: 1,
-    pageSize: 20 //most relevant results
-}
-
-
 
 const getEvent = async (req, res) => {
     try {
@@ -111,13 +89,10 @@ const putEvent = async (req, res) => {
         return res.status(200).send(response)
     } catch (err) {
         console.error(err);
-        console.error(err.name);
         if (err.name === "ValidationError") { //mongoose validation error (category-enum; relatedEvents-ObjectId)
-            console.log("name1", err, err.name)
             return res.status(422).send(err.message);
         }
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url or related events
-            console.log("name2", err, err.name)
             return res.status(400).send("Invalid ObjectId format in the url or in the list of related events")
         }
         return res.status(err.code || 500).send(err.error || "Internal server error"); //NIV validation error
