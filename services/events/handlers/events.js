@@ -1,6 +1,6 @@
 const { createEvent, getAllEvents, getOneEvent, updateEvent, deleteEvent } = require("../../../pkg/events");
 const { CreateEvent, UpdateEvent, validateEvent } = require("../../../pkg/events/validate");
-
+const fs = require("fs");
 
 //only active and admin profiles can create, update and delete events - checked in all 3 handlers
 
@@ -50,7 +50,20 @@ const getEvents = async (req, res) => {
 
         const events = await getAllEvents({ filterObject, sortObject, page, pageSize })
 
-        return res.status(200).send(events)
+        //get Images list 
+        const DirPath = `${__dirname}/../../../uploads_events`;
+        const filesList = fs.readdirSync(DirPath)
+        const images = {} // key=event._id; value=img name
+
+        for (let event of events) {
+            let imgSrc = null
+            if (filesList.length > 0) {
+                imgSrc = filesList.find(item => item.slice(0, 24) === event._id.toString()) || null
+            }
+            images[event._id] = imgSrc
+        }
+
+        return res.status(200).send({ events, images })
     } catch (err) {
         console.error(err);
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
