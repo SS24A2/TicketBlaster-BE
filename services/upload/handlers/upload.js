@@ -2,7 +2,7 @@ const generateFileName = require("../../../pkg/strings");
 const fs = require("fs");
 
 const MAX_FILESIZE = 10 * 1024 * 1024;  // 10mb  
-const ALLOWED_FILETYPES = ["image/jpeg", "image/jpg", "image/png"];
+const ALLOWED_FILETYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 const upload = async (req, res) => {
   try {

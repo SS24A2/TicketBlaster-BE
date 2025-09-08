@@ -4,3 +4,6 @@ config.json
 notes.txt
 users.txt
 getEventsQuery.js
+
+uploads_users
+uploads_events
