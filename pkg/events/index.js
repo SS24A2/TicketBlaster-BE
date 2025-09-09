@@ -67,7 +67,7 @@ const getAllEvents = async ({ filterObject, sortObject, page, pageSize }) => {
 
 const getOneEvent = async (filterObject) => {
     try {
-        const res = await EventModel.findOne(filterObject)
+        const res = await EventModel.findOne(filterObject).populate("relatedEvents")
         return res
     } catch (err) {
         console.error(err)

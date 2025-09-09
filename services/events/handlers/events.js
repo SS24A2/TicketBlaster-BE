@@ -75,11 +75,23 @@ const getEvents = async (req, res) => {
 
 const getEvent = async (req, res) => {
     try {
-        const response = await getOneEvent({ _id: req.params.id })
-        if (!response) {
+        const event = await getOneEvent({ _id: req.params.id })
+        if (!event) {
             return res.status(400).send("The selected event is not found")
         }
-        return res.status(200).send(response)
+
+        //get Images  
+        const DirPath = `${__dirname}/../../../uploads_events`;
+        const filesList = fs.readdirSync(DirPath)
+        const images = {} // key=event._id; value=img name
+
+        if (filesList.length > 0) {
+            images[event._id] = filesList.find(item => item.slice(0, 24) === event._id.toString()) || null
+            for (let relatedEvent of event.relatedEvents) {
+                images[relatedEvent._id] = filesList.find(item => item.slice(0, 24) === relatedEvent._id.toString()) || null
+            }
+        }
+        return res.status(200).send({ event, images })
     } catch (err) {
         console.error(err);
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
