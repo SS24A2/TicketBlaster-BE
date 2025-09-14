@@ -8,7 +8,7 @@ const CreateEvent = {
     location: "required|string",
     details: "required|string",
     price: "required|integer",
-    relatedEvents: "required|array",
+    relatedEvents: "array",
 };
 
 const UpdateEvent = {
