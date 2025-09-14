@@ -17,7 +17,7 @@ const UpdateEvent = {
     date: "date",
     location: "string",
     details: "string",
-    price: "integer",
+    price: "numeric",
     relatedEvents: "array",
 };
 
