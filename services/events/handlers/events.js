@@ -137,7 +137,7 @@ const deleteOneEvent = async (req, res) => {
     } catch (err) {
         console.error(err);
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
-            return res.status(400).send("Invalid ObjectId format in the url")
+            return res.status(400).send("The selected event is not found")
         }
         return res.status(500).send("Internal server error")
     }
