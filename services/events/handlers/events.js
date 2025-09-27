@@ -1,6 +1,7 @@
 const { createEvent, getAllEvents, getOneEvent, updateEvent, deleteEvent } = require("../../../pkg/events");
 const { CreateEvent, UpdateEvent, validateEvent } = require("../../../pkg/events/validate");
 const fs = require("fs");
+const { createTickets } = require("../../../pkg/ecommerce");
 
 //only active and admin profiles can create, update and delete events - checked in all 3 handlers
 
@@ -12,6 +13,7 @@ const postEvent = async (req, res) => {
         }
         await validateEvent(req.body, CreateEvent)
         const createdDocument = await createEvent(req.body)
+        await createTickets({ eventId: createdDocument._id, numOfTickets: createdDocument.numOfTickets })
         return res.status(201).send(createdDocument)
     } catch (err) {
         console.error(err);
