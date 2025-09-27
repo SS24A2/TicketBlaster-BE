@@ -28,6 +28,11 @@ const eventSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    numOfTickets: {
+        type: Number,
+        required: true,
+        immutable: true
+    },
     relatedEvents: {
         type: [mongoose.SchemaTypes.ObjectId],
         ref: "Event",
@@ -98,4 +103,4 @@ const deleteEvent = async (id) => {
     }
 }
 
-module.exports = { createEvent, getAllEvents, getOneEvent, updateEvent, deleteEvent }
+module.exports = { createEvent, getAllEvents, getOneEvent, updateEvent, deleteEvent, EventModel }

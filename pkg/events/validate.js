@@ -8,6 +8,7 @@ const CreateEvent = {
     location: "required|string",
     details: "required|string",
     price: "required|integer",
+    numOfTickets: "required|integer",
     relatedEvents: "array",
 };
 

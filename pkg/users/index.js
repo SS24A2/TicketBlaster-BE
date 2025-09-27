@@ -88,4 +88,4 @@ const deleteUser = async (id) => {
   }
 }
 
-module.exports = { createUser, getAllUsers, getOneUser, updateUser, deleteUser }
+module.exports = { createUser, getAllUsers, getOneUser, updateUser, deleteUser, UserModel }
