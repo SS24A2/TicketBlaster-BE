@@ -9,10 +9,6 @@ db.init();
 const api = express();
 api.use(express.json());
 
-//vo proxy ke stojat finalno ovie 2 linii, samo za testiranje se kopirani tuka
-const cors = require("cors");
-api.use(cors({ origin: "http://localhost:5173" }));
-
 api.post("/api/v1/auth/login", auth.login);
 api.post("/api/v1/auth/register", auth.register);
 api.post("/api/v1/auth/forgotPassword", auth.forgotPassword);

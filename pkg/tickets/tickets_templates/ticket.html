@@ -5,33 +5,95 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{title}}</title>
+    <style>
+        .ticket-wrapper {
+            margin: 20px auto;
+            width: 534px;
+            height: 663px;
+            box-shadow: 0px 20px 40px #00000029;
+            border-radius: 30px;
+            background-color: white;
+        }
+
+        .logo {
+            width: 255px;
+            height: 40px;
+            margin: 51px 139px 37px 139px;
+        }
+
+        .event-img {
+            width: 443px;
+            height: 262px;
+            border-radius: 20px;
+            display: flex;
+            margin: 0 auto 24px auto;
+            object-fit: cover;
+        }
+
+        .ticket-wrapper-innner {
+            width: 443px;
+            display: flex;
+            justify-content: space-between;
+            margin: auto;
+        }
+
+        .event-name {
+            letter-spacing: -2.42px;
+            margin: 0;
+            font-size: 40px;
+            line-height: 52px;
+            font-weight: 700;
+        }
+
+        .event-date {
+            letter-spacing: -0.99px;
+            color: #FF48AB;
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 22px;
+        }
+
+        .event-location {
+            letter-spacing: -0.77px;
+            color: #393939;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 17px;
+        }
+
+        .qr-code {
+            width: 152px;
+            height: 152px;
+            margin-top: 14px;
+        }
+
+        .ticket-code {
+            letter-spacing: -0.77px;
+            margin-top: 30px;
+            text-align: center;
+            font-size: 18px;
+            line-height: 17px;
+            font-weight: 700;
+        }
+    </style>
 </head>
 
 <body>
-    <div
-        style="margin:20px auto; width: 534px; height: 663px; box-shadow: 0px 20px 40px #00000029; border-radius: 30px; background-color: white;">
-        <img style="width: 255px; height: 40px;margin: 51px 139px 37px 139px;" src="{{logo}}" , alt="logo" />
-        <img style="width: 443px; height: 262px; border-radius: 20px; display: flex;margin: 0 auto 24px auto; object-fit: cover;"
-            src="{{eventImg}}" , alt="event" />
-        <div style="width: 443px; display: flex; justify-content: space-between; margin: auto;">
+    <div class="ticket-wrapper">
+        <img class="logo" src="{{logo}}" , alt="logo" />
+        <img class="event-img" src="{{eventImg}}" , alt="event" />
+        <div class="ticket-wrapper-innner">
             <div>
-                <p style="letter-spacing: -2.42px; margin: 0; font-size: 40px; line-height: 52px; font-weight: 700;">
-                    {{eventName}}</p>
-                <p
-                    style="letter-spacing: -0.99px; color: #FF48AB;margin: 0;font-size: 18px; font-weight: 700; line-height: 22px;">
-                    {{eventDate}}
-                <p>
-                <p
-                    style="letter-spacing: -0.77px; color: #393939; font-size: 14px;font-weight: 700; line-height: 17px;">
-                    {{eventLocation}}</p>
+                <p class="event-name">{{eventName}}</p>
+                <p class="event-date">{{eventDate}}</p>
+                <p class="event-location">{{eventLocation}}</p>
             </div>
 
-            <img style="width: 152px; height: 152px; margin-top: 14px;" src="{{qrCode}}" , alt="qrCode" />
+            <img class="qr-code" src="{{qrCode}}" , alt="qrCode" />
         </div>
 
-        <p
-            style="letter-spacing: -0.77px; margin-top: 30px; text-align: center; font-size: 18px; line-height: 17px;font-weight: 700;">
-            Ticket code: {{ticketId}}</p>
+        <p class="ticket-code">Ticket code: {{ticketId}}</p>
     </div>
 </body>
 
