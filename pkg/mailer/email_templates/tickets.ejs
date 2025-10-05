@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tickets</title>
+  <style>
+    h3 {
+      color: rgb(255, 255, 255);
+      font-size: 30px;
+      background-color: rgb(197, 13, 130);
+      width: 700px;
+      border-radius: 10px;
+      text-align: center;
+      padding: 30px;
+      margin: auto;
+    }
+
+    .events-wrapper {
+      width: 500px;
+      margin: 20px auto;
+    }
+
+    .event {
+      background-color: rgb(231, 123, 191);
+      padding: 10px;
+      border-radius: 20px;
+      margin: 20px auto;
+      text-align: center;
+    }
+
+    .event h4 {
+      font-size: 24px;
+      margin: 10px auto;
+    }
+
+    .event h5 {
+      font-size: 18px;
+      color: rgb(255, 255, 255);
+      margin: 10px auto;
+    }
+
+    .event p {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 10px auto;
+    }
+
+    .logo {
+      margin: 20px auto 50px;
+      display: flex;
+      width: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <img src="cid:logo.png" alt="logo" class="logo" />
+  <h3>
+    <%= data.fullname %>, You Got the Tickets!
+  </h3>
+  <div class="events-wrapper">
+    <% Object.keys(data).slice(1).forEach(key=>{ %>
+      <div class="event">
+        <h4>
+          <%= data[key][0].eventId.name %>
+        </h4>
+        <h5>
+          <%= data[key][0].eventId.date.toDateString() %>
+        </h5>
+        <p>
+          <%= data[key].length %> ticket/s
+        </p>
+      </div>
+      <% }) %>
+  </div>
+</body>
+
+</html>
