@@ -80,6 +80,15 @@ const getOneEvent = async (filterObject) => {
     }
 }
 
+const getCartEvents = async (filterObject) => {
+    try {
+        const res = await EventModel.find(filterObject)
+        return res
+    } catch (err) {
+        console.error(err)
+        throw err
+    }
+}
 
 //***PUT
 const updateEvent = async (id, data) => {
@@ -103,4 +112,4 @@ const deleteEvent = async (id) => {
     }
 }
 
-module.exports = { createEvent, getAllEvents, getOneEvent, updateEvent, deleteEvent, EventModel }
+module.exports = { createEvent, getAllEvents, getOneEvent, updateEvent, deleteEvent, EventModel, getCartEvents }

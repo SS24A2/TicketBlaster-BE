@@ -25,7 +25,7 @@ app.use(
       "/api/v1/auth/forgotPassword",
       "/api/v1/auth/resetPassword",
       { url: '/api/v1/events', methods: ['GET'] },
-      { url: /^\/api\/v1\/events\/.*/, methods: ['GET'] }
+      { url: /^\/api\/v1\/events\/[0-9a-z]{5,}$/, methods: ['GET'] }
     ]
   })
 );

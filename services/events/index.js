@@ -3,7 +3,7 @@ const express = require("express");
 const config = require("../../pkg/config");
 const db = require("../../pkg/db");
 
-const { postEvent, getEvents, getEvent, putEvent, deleteOneEvent } = require("./handlers/events");
+const { postEvent, getEvents, getEvent, putEvent, deleteOneEvent, getEventsFromCart } = require("./handlers/events");
 
 db.init();
 
@@ -11,6 +11,7 @@ const api = express();
 api.use(express.json())
 
 api.get("/api/v1/events", getEvents);
+api.get("/api/v1/events/cart", getEventsFromCart); //requires jwt (not the case for the other events get routes)
 api.get("/api/v1/events/:id", getEvent);
 api.post("/api/v1/events", postEvent);
 api.put("/api/v1/events/:id", putEvent);

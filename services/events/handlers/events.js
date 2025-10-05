@@ -1,4 +1,4 @@
-const { createEvent, getAllEvents, getOneEvent, updateEvent, deleteEvent } = require("../../../pkg/events");
+const { createEvent, getAllEvents, getOneEvent, updateEvent, deleteEvent, getCartEvents } = require("../../../pkg/events");
 const { CreateEvent, UpdateEvent, validateEvent } = require("../../../pkg/events/validate");
 const fs = require("fs");
 const { createTickets } = require("../../../pkg/ecommerce");
@@ -69,7 +69,7 @@ const getEvents = async (req, res) => {
     } catch (err) {
         console.error(err);
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
-            return res.status(400).send("Invalid ObjectId format in the url")
+            return res.status(404).send("Requested url cannot be found")
         }
         return res.status(500).send("Internal server error")
     }
@@ -97,7 +97,7 @@ const getEvent = async (req, res) => {
     } catch (err) {
         console.error(err);
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
-            return res.status(400).send("Invalid ObjectId format in the url")
+            return res.status(404).send("Requested url cannot be found")
         }
         return res.status(500).send("Internal server error")
     }
@@ -120,7 +120,7 @@ const putEvent = async (req, res) => {
             return res.status(422).send(err.message);
         }
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url or related events
-            return res.status(400).send("Invalid ObjectId format in the url or in the list of related events")
+            return res.status(400).send("Invalid ObjectId format in the url or in the list of related events") //change message
         }
         return res.status(err.code || 500).send(err.error || "Internal server error"); //NIV validation error
     }
@@ -145,4 +145,44 @@ const deleteOneEvent = async (req, res) => {
     }
 }
 
-module.exports = { postEvent, getEvents, getEvent, putEvent, deleteOneEvent }
+const getEventsFromCart = async (req, res) => {
+    try {
+        let { ids } = req.query
+        if (!ids) {
+            return res.status(404).send("Requested url cannot be found")
+        }
+        const eventIdsArray = ids.split(",")
+        for (let id of eventIdsArray) {
+            if (id.length !== 24) {
+                return res.status(404).send("Requested url cannot be found")
+            }
+        }
+
+        const dateNow = new Date()
+        let filterObject = { _id: { $in: eventIdsArray }, date: { $gte: dateNow } }
+        const events = await getCartEvents(filterObject)
+
+        //get Images list 
+        const DirPath = `${__dirname}/../../../uploads_events`;
+        const filesList = fs.readdirSync(DirPath)
+        const images = {} // key=event._id; value=img name
+
+        for (let event of events) {
+            let imgSrc = null
+            if (filesList.length > 0) {
+                imgSrc = filesList.find(item => item.slice(0, 24) === event._id.toString()) || null
+            }
+            images[event._id] = imgSrc
+        }
+
+        return res.status(200).send({ events, images })
+    } catch (err) {
+        console.error(err);
+        if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
+            return res.status(404).send("Requested url cannot be found")
+        }
+        return res.status(500).send("Internal server error")
+    }
+}
+
+module.exports = { postEvent, getEvents, getEvent, putEvent, deleteOneEvent, getEventsFromCart }
