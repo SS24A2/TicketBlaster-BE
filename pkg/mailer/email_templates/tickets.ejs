@@ -23,30 +23,31 @@
     }
 
     .event {
-      background-color: rgb(231, 123, 191);
       padding: 10px;
       border-radius: 20px;
       margin: 20px auto;
       text-align: center;
+      background-color: rgb(255 255 255);
+      border: 2px solid rgb(255 157 219)
     }
 
     .event h4 {
       font-size: 24px;
       margin: 10px auto;
-      color: #91014d;
+      color: #c13f84;
     }
 
     .event h5 {
       font-size: 18px;
-      color: rgb(255, 255, 255);
       margin: 10px auto;
+      font-weight: 500;
     }
 
     .event p {
       font-size: 16px;
-      font-weight: 700;
+      font-weight: 600;
       margin: 10px auto;
-      color: #91014d;
+      color: #c13f84;
     }
 
     .logo {
@@ -71,8 +72,7 @@
         <h5>
           <%= data[key][0].eventId.date.toDateString() %>
         </h5>
-        <p>
-          <%= data[key].length %> ticket/s
+        <p>Number of tickets: <%= data[key].length %>
         </p>
       </div>
       <% }) %>
