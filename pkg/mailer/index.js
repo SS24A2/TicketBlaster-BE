@@ -12,7 +12,7 @@ const { createAllTickets } = require("../tickets/createAllTickets")
 
 const mailTemplates = {
     PASSWORD_RESET: {
-        title: "Your password reset link has been generated",
+        title: "Password Reset",
         template: "mail-reset-password.ejs",
     },
     WELCOME: {
@@ -54,6 +54,12 @@ const sendMail = async (to, type, data, ticketsIdArray) => {
             messageParams.attachment = attachments;
 
             const imageFile = await fsPromises.readFile(`${__dirname}/email_templates/logo.png`)
+            const file = { filename: 'logo.png', data: imageFile }
+            messageParams.inline = file;
+        }
+
+        if (type === "PASSWORD_RESET") {
+            const imageFile = await fsPromises.readFile(`${__dirname}/email_templates/logo_white.png`)
             const file = { filename: 'logo.png', data: imageFile }
             messageParams.inline = file;
         }
