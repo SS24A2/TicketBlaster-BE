@@ -44,7 +44,7 @@ async function createAllTickets(ticketsIdArray) {
             }
             eventImage = eventImage ? eventImage : noImageSrc
 
-            const date = ticket.eventId.date.toDateString()
+            const date = ticket.eventId.date.toDateString().split(' ').slice(1).join(' ')
 
             let ticketFile = await createTicket(templatePath, { title: `${ticket.eventId.name}-Ticket code:${ticket._id}`, logo: logoSrc, eventImg: eventImage, eventName: ticket.eventId.name, eventDate: date, eventLocation: ticket.eventId.location, qrCode: qrCodeSrc, ticketId: ticket._id })
             ticketsFiles.push({ eventId: ticket.eventId._id, eventName: ticket.eventId.name, ticket: ticketFile, })
