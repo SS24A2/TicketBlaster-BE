@@ -9,7 +9,7 @@ const listAllUsers = async (req, res) => {
     try {
         const account = await getOneUser({ _id: req.headers.id })
 
-        if (!account || account.role !== "admin" || account.status === "deleted") {
+        if (!account || account.role !== "admin" || account.status !== "active") {
             return res.status(400).send("Unauthorized!");
         }
 
@@ -38,7 +38,7 @@ const getUser = async (req, res) => {
     try {
         const user = await getOneUser({ _id: req.headers.id })
 
-        if (!user || user.status === "deleted") {
+        if (!user || user.status !== "active") {
             return res.status(400).send("Unauthorized!");
         }
 
@@ -62,13 +62,13 @@ const changeUserRole = async (req, res) => {
     try {
         const account = await getOneUser({ _id: req.headers.id })
 
-        if (!account || account.role !== "admin" || account.status === "deleted") {
+        if (!account || account.role !== "admin" || account.status !== "active") {
             return res.status(400).send("Unauthorized!");
         }
 
         const accountToUpdate = await getOneUser({ _id: req.params.id })
 
-        if (!accountToUpdate || accountToUpdate.status === "deleted") {
+        if (!accountToUpdate || accountToUpdate.status !== "active") {
             return res.status(400).send("User role cannot be updated!");
         }
 
@@ -92,7 +92,7 @@ const deleteUser = async (req, res) => {
     try {
         const account = await getOneUser({ _id: req.headers.id })
 
-        if (!account || account.role !== "admin" || account.status === "deleted") {
+        if (!account || account.role !== "admin" || account.status !== "active") {
             return res.status(400).send("Unauthorized!");
         }
 
@@ -122,7 +122,7 @@ const changeProfileInfo = async (req, res) => {
 
         const account = await getOneUser({ _id: req.headers.id })
 
-        if (!account || account.status === "deleted") {
+        if (!account || account.status !== "active") {
             return res.status(400).send("User not found!");
         }
 
@@ -147,7 +147,7 @@ const changePassword = async (req, res) => {
 
         const account = await getOneUser({ _id: req.headers.id })
 
-        if (!account || account.status === "deleted") {
+        if (!account || account.status !== "active") {
             return res.status(400).send("User not found!");
         }
 
