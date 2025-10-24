@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['active', 'deleted'],
-    default: "active",
+    enum: ['active', 'deleted', "pending"],
+    default: "pending",
     message: '{VALUE} is not a supported status. Please choose active or deleted.'
   }
 }, { timestamps: true });
@@ -45,9 +45,10 @@ const createUser = async (data) => {
 
 
 //***GET
+//Returns active and deleted users, unverified (pending) accounts are excluded
 const getAllUsers = async () => {
   try {
-    const res = await UserModel.find()
+    const res = await UserModel.find({ status: { $ne: "pending" } })
     return res
   } catch (err) {
     console.error(err)
@@ -77,6 +78,18 @@ const updateUser = async (id, data) => {
   }
 }
 
+//***PUT
+const updateUnverifiedUser = async (id, data) => {
+  try {
+    const res = await UserModel.findOneAndUpdate({ _id: id }, data, { runValidators: true })
+    return res
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
+
+
 //***DELETE
 const deleteUser = async (id) => {
   try {
@@ -88,4 +101,4 @@ const deleteUser = async (id) => {
   }
 }
 
-module.exports = { createUser, getAllUsers, getOneUser, updateUser, deleteUser, UserModel }
+module.exports = { createUser, getAllUsers, getOneUser, updateUser, deleteUser, UserModel, updateUnverifiedUser }

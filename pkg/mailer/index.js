@@ -22,6 +22,10 @@ const mailTemplates = {
     TICKETS: {
         title: "Your Ticket Purchase Is Complete!",
         template: "tickets.ejs",
+    },
+    VERIFICATION: {
+        title: "TicketBlaster - Verify your email adress",
+        template: "verification-mail.ejs",
     }
 };
 
@@ -58,7 +62,7 @@ const sendMail = async (to, type, data, ticketsIdArray) => {
             messageParams.inline = file;
         }
 
-        if (type === "PASSWORD_RESET") {
+        if (type === "PASSWORD_RESET" || type === "VERIFICATION") {
             const imageFile = await fsPromises.readFile(`${__dirname}/email_templates/logo_white.png`)
             const file = { filename: 'logo.png', data: imageFile }
             messageParams.inline = file;
