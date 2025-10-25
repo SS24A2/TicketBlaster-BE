@@ -79,6 +79,17 @@ const updateUser = async (id, data) => {
 }
 
 //***PUT
+const activateUser = async (id, data) => {
+  try {
+    const res = await UserModel.updateOne({ _id: id, status: "pending" }, data, { runValidators: true })
+    return res
+  } catch (err) {
+    console.error(err)
+    throw err
+  }
+}
+
+//***PUT
 const updateUnverifiedUser = async (id, data) => {
   try {
     const res = await UserModel.findOneAndUpdate({ _id: id }, data, { runValidators: true })
@@ -101,4 +112,4 @@ const deleteUser = async (id) => {
   }
 }
 
-module.exports = { createUser, getAllUsers, getOneUser, updateUser, deleteUser, UserModel, updateUnverifiedUser }
+module.exports = { createUser, getAllUsers, getOneUser, updateUser, deleteUser, UserModel, updateUnverifiedUser, activateUser }
