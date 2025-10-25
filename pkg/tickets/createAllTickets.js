@@ -23,7 +23,10 @@ async function generateImageSrc(path) {
 async function createAllTickets(ticketsIdArray) {
     try {
         const DirPath = `${__dirname}/../../uploads_events`;
-        const filesList = fs.readdirSync(DirPath)
+        let filesList = []
+        if (fs.existsSync(DirPath)) {
+            filesList = fs.readdirSync(DirPath)
+        }
 
         const logoSrc = await generateImageSrc(logoPath)
         const qrCodeSrc = await generateImageSrc(qrCodePath)

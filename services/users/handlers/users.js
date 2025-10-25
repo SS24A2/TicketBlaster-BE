@@ -14,7 +14,11 @@ const listAllUsers = async (req, res) => {
         }
 
         const DirPath = `${__dirname}/../../../uploads_users`;
-        const filesList = fs.readdirSync(DirPath)
+        let filesList = []
+        if (fs.existsSync(DirPath)) {
+            filesList = fs.readdirSync(DirPath)
+        }
+
 
         const users = await getAllUsers()
         const images = {} // key=user._id; value=img name
@@ -43,7 +47,10 @@ const getUser = async (req, res) => {
         }
 
         const DirPath = `${__dirname}/../../../uploads_users`;
-        const filesList = fs.readdirSync(DirPath)
+        let filesList = []
+        if (fs.existsSync(DirPath)) {
+            filesList = fs.readdirSync(DirPath)
+        }
 
         let image = null
 

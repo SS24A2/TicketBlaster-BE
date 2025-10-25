@@ -30,7 +30,10 @@ const upload = async (req, res) => {
     const filePath = `${DirPath}/${newFileNameUnique}`;
 
     // deleting the previously uploaded image when a new image is uploaded (for the same user/event)
-    const filesList = fs.readdirSync(DirPath)
+    let filesList = []
+    if (fs.existsSync(DirPath)) {
+      filesList = fs.readdirSync(DirPath)
+    }
     if (filesList.length > 0) {
       const previousFile = filesList.find((item) => item.slice(0, 24) === uploadObjectId)
       if (previousFile) {

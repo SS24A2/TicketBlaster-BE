@@ -54,7 +54,10 @@ const getEvents = async (req, res) => {
 
         //get Images list 
         const DirPath = `${__dirname}/../../../uploads_events`;
-        const filesList = fs.readdirSync(DirPath)
+        let filesList = []
+        if (fs.existsSync(DirPath)) {
+            filesList = fs.readdirSync(DirPath)
+        }
         const images = {} // key=event._id; value=img name
 
         for (let event of events) {
@@ -84,7 +87,10 @@ const getEvent = async (req, res) => {
 
         //get Images  
         const DirPath = `${__dirname}/../../../uploads_events`;
-        const filesList = fs.readdirSync(DirPath)
+        let filesList = []
+        if (fs.existsSync(DirPath)) {
+            filesList = fs.readdirSync(DirPath)
+        }
         const images = {} // key=event._id; value=img name
 
         if (filesList.length > 0) {
@@ -164,7 +170,10 @@ const getEventsFromCart = async (req, res) => {
 
         //get Images list 
         const DirPath = `${__dirname}/../../../uploads_events`;
-        const filesList = fs.readdirSync(DirPath)
+        let filesList = []
+        if (fs.existsSync(DirPath)) {
+            filesList = fs.readdirSync(DirPath)
+        }
         const images = {} // key=event._id; value=img name
 
         for (let event of events) {
