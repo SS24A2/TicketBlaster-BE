@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const { AccountRegister, AccountLogin, AccountForgotPassword, AccountChangePassword, validateAccount } = require("../../../pkg/users/validate");
-const { createUser, getOneUser, updateUser } = require("../../../pkg/users");
+const { createUser, getOneUser, updateUser, updateUnverifiedUser, activateUser } = require("../../../pkg/users");
 const config = require("../../../pkg/config");
 const { sendMail } = require("../../../pkg/mailer/index");
 
@@ -17,8 +17,8 @@ const login = async (req, res) => {
     }
 
     //TBC
-    if (existingUser.userStatus === "deleted") {
-      return res.status(400).send("Cannot log in! Your profile is inactive!");
+    if (existingUser.status !== "active") {
+      return res.status(400).send("Cannot log in! Your profile is unverified or deleted!");
     }
 
     const payload = {
@@ -44,7 +44,7 @@ const register = async (req, res) => {
     const { fullname, email, password, confirmPassword } = req.body
     const existingUser = await getOneUser({ email: email })
 
-    if (existingUser) {
+    if (existingUser && existingUser.status !== "pending") {
       return res.status(400).send("User with this email already exists")
     }
 
@@ -52,13 +52,96 @@ const register = async (req, res) => {
       return res.status(400).send("Password confirmation failed.")
     }
 
-    const createdDocument = await createUser({ fullname, email, password: bcrypt.hashSync(password) })
-    await sendMail(email, "WELCOME", { fullname });
-    return res.status(201).send(createdDocument)
+    let createdDocument = null
+    if (existingUser && existingUser.status === "pending") {
+      createdDocument = await updateUnverifiedUser(existingUser.id, { fullname, password: bcrypt.hashSync(password) })
+    } else {
+      createdDocument = await createUser({ fullname, email, password: bcrypt.hashSync(password) })
+    }
+
+    const secret = config.getSection("security").jwt_secret + createdDocument.password
+    const payload = {
+      fullname: createdDocument.fullname,
+      email: createdDocument.email,
+      id: createdDocument._id,
+      role: createdDocument.role,
+      status: createdDocument.status
+    };
+
+    const token = jwt.sign(payload, secret, { expiresIn: "24h" });
+
+    const link = `${config.getSection("links").verify}/${createdDocument._id}/${token}`
+    await sendMail(email, "VERIFICATION", {
+      link
+    });
+    return res.status(201).send({ id: createdDocument._id })
   } catch (err) {
     console.error(err);
     //MailgunAPIError; NIV error ...
     return res.status(err.code || err.status || 500).send(err.error || err.type || "Internal Server Error!"); //TBC
+  }
+};
+
+const verifyAccount = async (req, res) => {
+  try {
+    const { id, token } = req.params;
+    const user = await getOneUser({ _id: id });
+    if (!user) {
+      return res.status(400).send({ error: "User not found!" });
+    }
+    if (user.status !== "pending") {
+      return res.status(400).send({ error: "Verification completed" });
+    }
+    const secret = config.getSection("security").jwt_secret + user.password;
+
+    jwt.verify(token, secret, { algorithms: ['HS256'] })
+
+    const updateResult = await activateUser(id, { status: "active" })
+    if (updateResult.modifiedCount === 1) {
+      await sendMail(user.email, "WELCOME", { fullname: user.fullname });
+    }
+
+    return res.status(200).send("Token is valid")
+  } catch (err) {
+    console.log(err);
+    if (['TokenExpiredError', 'JsonWebTokenError', 'NotBeforeError'].includes(err.name)) {
+      return res.status(401).send({ error: "Token not valid or expired!" })
+    }
+    return res.status(err.code || 500).send({ error: err.error || "Internal server error" });
+  }
+};
+
+const resendVerificationMail = async (req, res) => {
+  try {
+    const { id } = req.params
+    const unverifiedUser = await getOneUser({ _id: id })
+    if (!unverifiedUser) {
+      return res.status(400).send({ error: "User not found!" });
+    }
+    if (unverifiedUser.status !== "pending") {
+      return res.status(400).send({ error: "Verification completed" })
+    }
+    const secret = config.getSection("security").jwt_secret + unverifiedUser.password
+    const payload = {
+      fullname: unverifiedUser.fullname,
+      email: unverifiedUser.email,
+      id: unverifiedUser._id,
+      role: unverifiedUser.role,
+      status: unverifiedUser.status
+    };
+
+    const token = jwt.sign(payload, secret, { expiresIn: "24h" });
+
+    const link = `${config.getSection("links").verify}/${unverifiedUser._id}/${token}`
+    await sendMail(unverifiedUser.email, "VERIFICATION", {
+      link
+    });
+
+    return res.status(200).send("New verification email has been sent to your email address.")
+  } catch (err) {
+    console.error(err);
+    //MailgunAPIError ...
+    return res.status(err.code || 500).send(err.error || "Internal Server Error!");
   }
 };
 
@@ -73,8 +156,8 @@ const forgotPassword = async (req, res) => {
     }
 
     //TBC
-    if (user.userStatus === "deleted") {
-      return res.status(400).send("Your profile is inactive!");
+    if (user.status !== "active") {
+      return res.status(400).send("Your profile is unverified or deleted!");
     }
 
     const secret = config.getSection("security").jwt_secret + user.password;
@@ -87,7 +170,8 @@ const forgotPassword = async (req, res) => {
     };
 
     const token = jwt.sign(payload, secret, { expiresIn: "15m" });
-    const link = `http://localhost:5173/account/password/reset/${user._id}/${token}`
+
+    const link = `${config.getSection("links").reset_password}/${user._id}/${token}`
 
     await sendMail(email, "PASSWORD_RESET", {
       fullname: user.fullname,
@@ -109,15 +193,15 @@ const resetPasswordLinkCheck = async (req, res) => {
       return res.status(400).send("User not found!");
     }
     const secret = config.getSection("security").jwt_secret + user.password;
-    jwt.verify(token, secret, { algorithms: ['HS256'] }, function (err, decoded) {
-      if (err) {
-        return res.status(401).send("Unauthorized. Token not valid")
-      }
-    });
+
+    jwt.verify(token, secret, { algorithms: ['HS256'] })
 
     return res.status(200).send("Token is valid")
   } catch (err) {
     console.log(err);
+    if (['TokenExpiredError', 'JsonWebTokenError', 'NotBeforeError'].includes(err.name)) {
+      return res.status(401).send({ error: "Unauthorized. Token not valid" })
+    }
     return res.status(500).send("Internal server error");
   }
 };
@@ -140,11 +224,8 @@ const resetPassword = async (req, res) => {
     }
 
     const secret = config.getSection("security").jwt_secret + user.password;
-    jwt.verify(token, secret, { algorithms: ['HS256'] }, function (err, decoded) {
-      if (err) {
-        return res.status(401).send("Unauthorized. Token not valid")
-      }
-    });
+
+    jwt.verify(token, secret, { algorithms: ['HS256'] })
 
     const newHashedPassword = bcrypt.hashSync(password);
 
@@ -152,6 +233,9 @@ const resetPassword = async (req, res) => {
     return res.status(200).send("Password reset successful!");
   } catch (err) {
     console.log(err);
+    if (['TokenExpiredError', 'JsonWebTokenError', 'NotBeforeError'].includes(err.name)) {
+      return res.status(401).send({ error: "Unauthorized. Token not valid" })
+    }
     return res.status(err.code || 500).send(err.error || "Internal Server Error!");
   }
 };
@@ -162,4 +246,6 @@ module.exports = {
   forgotPassword,
   resetPasswordLinkCheck,
   resetPassword,
+  verifyAccount,
+  resendVerificationMail
 };

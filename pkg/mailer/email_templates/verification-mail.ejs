@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TicketBlaster-Verify Your Email</title>
+    <style>
+        .mail-wrapper {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .header {
+            background-color: #f85eb1;
+            border-radius: 10px;
+            margin: 20px 0 50px;
+        }
+
+        .header img {
+            display: flex;
+            padding: 30px;
+            margin: auto;
+        }
+
+        .footer {
+            font-size: 12px;
+            font-weight: 400;
+            background-color: #f9f9f9;
+            line-height: 6;
+            border-radius: 10px;
+        }
+
+        .footer p {
+            text-align: center;
+        }
+
+        .main {
+            padding: 20px;
+        }
+
+        .main p {
+            font-size: 16px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin: 0 0 35px;
+            color: #464343;
+        }
+
+        .btn-container {
+            width: 300px;
+            margin: auto;
+        }
+
+        button {
+            width: 300px;
+            height: 50px;
+            border-radius: 10px;
+            background-color: #f958ad;
+            border: none;
+            cursor: pointer;
+            margin: 40px auto 30px;
+        }
+
+        button a {
+            color: white;
+            font-size: 16px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .signature {
+            margin: 50px 0;
+        }
+
+        .signature p {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="mail-wrapper">
+        <div class="header">
+            <img src="cid:logo.png" alt="logo" class="logo" />
+        </div>
+
+        <div class="main">
+            <h3>Verify Your TicketBlaster Email Address</h3>
+            <p>To continue setting up your account and start using TicketBlaster, please verify your email address.</p>
+
+            <div class="btn-container">
+                <button><a href=<%=data.link %> target="_blank">Verify email adress</a></button>
+            </div>
+
+            <p>The link will expire in 24 hours.</p>
+            <p>If you did not make this request, please disregard this email.</p>
+
+
+            <div class="signature">
+                <p>Thanks,</p>
+                <p>The TicketBlaster team</p>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <p>TicketBlaster, 87 Warren Avenue, Astoria, NY 11105</p>
+        </div>
+    </div>
+</body>
+
+</html>
