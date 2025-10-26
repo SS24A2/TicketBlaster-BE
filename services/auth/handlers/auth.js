@@ -190,7 +190,7 @@ const resetPasswordLinkCheck = async (req, res) => {
     const { id, token } = req.params;
     const user = await getOneUser({ _id: id });
     if (!user) {
-      return res.status(400).send("User not found!");
+      return res.status(400).send({ error: "User not found!" });
     }
     const secret = config.getSection("security").jwt_secret + user.password;
 
@@ -202,7 +202,7 @@ const resetPasswordLinkCheck = async (req, res) => {
     if (['TokenExpiredError', 'JsonWebTokenError', 'NotBeforeError'].includes(err.name)) {
       return res.status(401).send({ error: "Unauthorized. Token not valid" })
     }
-    return res.status(500).send("Internal server error");
+    return res.status(500).send({ error: "Internal server error" });
   }
 };
 
@@ -214,13 +214,13 @@ const resetPassword = async (req, res) => {
     const { password, confirmPassword } = req.body;
 
     if (password !== confirmPassword) {
-      return res.status(400).send("Passwords do not match!");
+      return res.status(400).send({ error: "Passwords do not match!" });
     }
 
     const user = await getOneUser({ _id: id });
 
     if (!user) {
-      return res.status(400).send("User not found!");
+      return res.status(400).send({ error: "User not found!" });
     }
 
     const secret = config.getSection("security").jwt_secret + user.password;
@@ -236,7 +236,7 @@ const resetPassword = async (req, res) => {
     if (['TokenExpiredError', 'JsonWebTokenError', 'NotBeforeError'].includes(err.name)) {
       return res.status(401).send({ error: "Unauthorized. Token not valid" })
     }
-    return res.status(err.code || 500).send(err.error || "Internal Server Error!");
+    return res.status(err.code || 500).send({ error: err.error || "Internal Server Error!" });
   }
 };
 
