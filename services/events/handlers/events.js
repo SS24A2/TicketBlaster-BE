@@ -135,19 +135,19 @@ const putEvent = async (req, res) => {
 const deleteOneEvent = async (req, res) => {
     try {
         if (req.headers.role !== "admin" || req.headers.status !== "active") {
-            return res.status(400).send("Unauthorized!");
+            return res.status(400).send({ error: "Unauthorized!" });
         }
         const response = await deleteEvent(req.params.id)
         if (response.deletedCount === 0) {
-            return res.status(400).send("The selected event is not found")
+            return res.status(400).send({ error: "The selected event is not found!" })
         }
         return res.status(200).send(response)
     } catch (err) {
         console.error(err);
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
-            return res.status(400).send("The selected event is not found")
+            return res.status(400).send({ error: "The selected event is not found!" })
         }
-        return res.status(500).send("Internal server error")
+        return res.status(500).send({ error: "Internal Server Error" })
     }
 }
 
