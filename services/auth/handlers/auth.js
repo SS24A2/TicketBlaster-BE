@@ -202,7 +202,7 @@ const resetPasswordLinkCheck = async (req, res) => {
     if (['TokenExpiredError', 'JsonWebTokenError', 'NotBeforeError'].includes(err.name)) {
       return res.status(401).send({ error: "Unauthorized. Token not valid" })
     }
-    return res.status(500).send({ error: "Internal server error" });
+    return res.status(500).send({ error: "Internal Server Error!" });
   }
 };
 
