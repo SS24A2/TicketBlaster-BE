@@ -23,8 +23,8 @@ const AccountChangePassword = {
 };
 
 const AccountUpdateDetails = {
-  fullname: "required|string",
-  email: "required|email",
+  fullname: "string",
+  email: "email",
 };
 
 const AccountRoleUpdate = {

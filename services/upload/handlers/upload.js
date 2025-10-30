@@ -7,14 +7,14 @@ const ALLOWED_FILETYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"]
 const upload = async (req, res) => {
   try {
     if (!req.files) {
-      return res.status(400).send("No file was uploaded!");
+      return res.status(400).send({ error: "No file was uploaded!" });
     }
 
     if (!ALLOWED_FILETYPES.includes(req.files.image.mimetype)) {
-      return res.status(400).send("File type not allowed!");
+      return res.status(400).send({ error: "File type not allowed!" });
     }
     if (MAX_FILESIZE < req.files.image.size) {
-      return res.status(400).send("File exceeds the maximal allowed file size!");
+      return res.status(400).send({ error: "File exceeds the maximal allowed file size!" });
     }
 
     const uploadType = req.params.type
@@ -45,7 +45,7 @@ const upload = async (req, res) => {
     return res.status(200).send({ filename: newFileNameUnique });
   } catch (err) {
     console.log("upload err", err)
-    return res.status(500).send("Internal Server Error!");
+    return res.status(500).send({ error: "Internal Server Error!" });
   }
 };
 

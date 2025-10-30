@@ -130,17 +130,26 @@ const changeProfileInfo = async (req, res) => {
         const account = await getOneUser({ _id: req.headers.id })
 
         if (!account || account.status !== "active") {
-            return res.status(400).send("User not found!");
+            return res.status(400).send({ error: "User not found!" });
+        }
+
+        if (email) {
+            const existingUser = await getOneUser({ email: email })
+            if (existingUser) {
+                return res.status(400).send({ error: "User with this email already exists!" });
+            }
         }
 
         if (account.fullname === fullname && account.email === email) {
-            return res.status(200).send(account)
+            return res.status(200).send({ error: "No changes in data." })
         }
-        const updatedAccount = await updateUser(account._id, { fullname, email })
+
+        const newData = fullname && email ? { fullname, email } : fullname ? { fullname } : email ? { email } : null
+        const updatedAccount = await updateUser(account._id, newData)
         return res.status(200).send(updatedAccount)
     } catch (err) {
         console.log(err);
-        return res.status(err.code || 500).send(err.error | "Internal Server Error!"); //TBC
+        return res.status(err.code || 500).send({ error: err.error | "Internal Server Error!" }); //TBC
     }
 };
 
@@ -149,13 +158,13 @@ const changePassword = async (req, res) => {
         await validateAccount(req.body, AccountChangePassword)
         const { password, confirmPassword } = req.body;
         if (password !== confirmPassword) {
-            return res.status(400).send("Passwords do not match!");
+            return res.status(400).send({ error: "Passwords do not match!" });
         }
 
         const account = await getOneUser({ _id: req.headers.id })
 
         if (!account || account.status !== "active") {
-            return res.status(400).send("User not found!");
+            return res.status(400).send({ error: "User not found!" });
         }
 
         const newHashedPassword = bcrypt.hashSync(password);
@@ -163,7 +172,7 @@ const changePassword = async (req, res) => {
         return res.status(200).send(updatedAccount)
     } catch (err) {
         console.log(err);
-        return res.status(err.code || 500).send(err.error | "Internal Server Error!"); //TBC
+        return res.status(err.code || 500).send({ error: err.error | "Internal Server Error!" }); //TBC
     }
 };
 
