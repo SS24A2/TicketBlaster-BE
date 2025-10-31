@@ -155,12 +155,12 @@ const getEventsFromCart = async (req, res) => {
     try {
         let { ids } = req.query
         if (!ids) {
-            return res.status(404).send("Requested url cannot be found")
+            return res.status(404).send({ error: "Requested url cannot be found" })
         }
         const eventIdsArray = ids.split(",")
         for (let id of eventIdsArray) {
             if (id.length !== 24) {
-                return res.status(404).send("Requested url cannot be found")
+                return res.status(404).send({ error: "Requested url cannot be found" })
             }
         }
 
@@ -188,9 +188,9 @@ const getEventsFromCart = async (req, res) => {
     } catch (err) {
         console.error(err);
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
-            return res.status(404).send("Requested url cannot be found")
+            return res.status(404).send({ error: "Requested url cannot be found" })
         }
-        return res.status(500).send("Internal server error")
+        return res.status(500).send({ error: "Internal server error" })
     }
 }
 
