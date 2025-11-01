@@ -4,13 +4,120 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome</title>
+  <title>TicketBlaster-Welcome</title>
+  <style>
+    .mail-wrapper {
+      max-width: 800px;
+      margin: auto;
+    }
+
+    .header {
+      background-color: #f85eb1;
+      border-radius: 10px;
+      margin: 20px 0 50px;
+    }
+
+    .header img {
+      display: flex;
+      padding: 30px;
+      margin: auto;
+    }
+
+    .footer {
+      font-size: 12px;
+      font-weight: 400;
+      background-color: #f9f9f9;
+      line-height: 6;
+      border-radius: 10px;
+    }
+
+    .footer p {
+      text-align: center;
+    }
+
+    .main {
+      padding: 20px;
+    }
+
+    .main p {
+      font-size: 16px;
+    }
+
+    h3 {
+      font-size: 18px;
+      margin: 0 0 35px;
+      color: #464343;
+    }
+
+    .signature {
+      margin: 50px 0;
+    }
+
+    .signature p {
+      margin: 0;
+    }
+
+    li {
+      font-weight: 500;
+      color: deeppink;
+      font-size: 15px;
+    }
+
+    li a {
+      color: #bc1080;
+      font-weight: 700;
+      font-style: italic;
+
+    }
+
+    .facebook,
+    .instagram {
+      width: 30px;
+      margin-right: 10px;
+    }
+  </style>
 </head>
 
 <body>
-  <h3 style="color: blue">Welcome</h3>
-  <p>Hello <%= data.fullname %></p>
+  <div class="mail-wrapper">
+    <div class="header">
+      <img src="cid:logo.png" alt="logo" class="logo" />
+    </div>
+
+    <div class="main">
+      <h3>Your TicketBlaster account is ready! Get started with your first event.</h3>
+      <p>Hi, <%=data.fullname %>
+      </p>
+      <p>Welcome to TicketBlaster! We’re so glad to have you as a part of our community. Thanks for signing up!</p>
+      <p style="font-weight: 700;">As a thank you, use code WELCOME10 for 10% off your first order.</p>
+      <p>We’re dedicated to making it easy and affordable for you to find and buy tickets to the events you love.</p>
+      <ul>
+        <li>Explore events: Browse our upcoming events to find your next experience <a href=<%=data.link1 %>
+            target="_blank">here</a>.</li>
+        <li>Learn more: Check out our FAQ page for common questions <a href=<%=data.link2 %>
+            target="_blank">here</a>.</li>
+      </ul>
+      <p>Follow us on social media for the latest updates and behind-the-scenes content. </p>
+      <span style="display: block;">
+        <img src="cid:facebook.png" alt="facebook" class="facebook" />
+        <img src="cid:instagram.png" alt="instagram" class="instagram" />
+      </span>
+
+
+      <p>We can’t wait to help you create amazing memories. </p>
+
+
+      <div class="signature">
+        <p>Best,</p>
+        <p>The TicketBlaster team</p>
+      </div>
+
+    </div>
+
+    <div class="footer">
+      <p>TicketBlaster, 87 Warren Avenue, Astoria, NY 11105</p>
+    </div>
+  </div>
 </body>
 
 </html>
-

@@ -68,6 +68,16 @@ const sendMail = async (to, type, data, ticketsIdArray) => {
             messageParams.inline = file;
         }
 
+        if (type === "WELCOME") {
+            const ticketBlasterLogo = await fsPromises.readFile(`${__dirname}/email_templates/logo_white.png`)
+            const file1 = { filename: 'logo.png', data: ticketBlasterLogo }
+            const facebookLogo = await fsPromises.readFile(`${__dirname}/email_templates/facebook.png`)
+            const file2 = { filename: 'facebook.png', data: facebookLogo }
+            const instagramLogo = await fsPromises.readFile(`${__dirname}/email_templates/instagram.png`)
+            const file3 = { filename: 'instagram.png', data: instagramLogo }
+            messageParams.inline = [file1, file2, file3];
+        }
+
         return await mg.messages.create(config.getSection("mailgun").domain, messageParams);
     } catch (err) {
         throw err;

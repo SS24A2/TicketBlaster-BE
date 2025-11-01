@@ -98,7 +98,7 @@ const verifyAccount = async (req, res) => {
 
     const updateResult = await activateUser(id, { status: "active" })
     if (updateResult.modifiedCount === 1) {
-      await sendMail(user.email, "WELCOME", { fullname: user.fullname });
+      await sendMail(user.email, "WELCOME", { fullname: user.fullname, link1: "http://localhost:5173/", link2: "http://localhost:5173/faq" });
     }
 
     return res.status(200).send("Token is valid")
