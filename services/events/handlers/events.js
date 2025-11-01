@@ -3,14 +3,8 @@ const { CreateEvent, UpdateEvent, validateEvent } = require("../../../pkg/events
 const fs = require("fs");
 const { createTickets } = require("../../../pkg/ecommerce");
 
-//only active and admin profiles can create, update and delete events - checked in all 3 handlers
-
 const postEvent = async (req, res) => {
     try {
-        console.log(req.headers)
-        if (req.headers.role !== "admin" || req.headers.status !== "active") {
-            return res.status(400).send("Unauthorized!");
-        }
         await validateEvent(req.body, CreateEvent)
         const createdDocument = await createEvent(req.body)
         await createTickets({ eventId: createdDocument._id, numOfTickets: createdDocument.numOfTickets })
@@ -111,9 +105,6 @@ const getEvent = async (req, res) => {
 
 const putEvent = async (req, res) => {
     try {
-        if (req.headers.role !== "admin" || req.headers.status !== "active") {
-            return res.status(400).send("Unauthorized!");
-        }
         await validateEvent(req.body, UpdateEvent)
         const response = await updateEvent(req.params.id, req.body)
         if (response.modifiedCount === 0) {
@@ -134,9 +125,6 @@ const putEvent = async (req, res) => {
 
 const deleteOneEvent = async (req, res) => {
     try {
-        if (req.headers.role !== "admin" || req.headers.status !== "active") {
-            return res.status(400).send({ error: "Unauthorized!" });
-        }
         const response = await deleteEvent(req.params.id)
         if (response.deletedCount === 0) {
             return res.status(400).send({ error: "The selected event is not found!" })

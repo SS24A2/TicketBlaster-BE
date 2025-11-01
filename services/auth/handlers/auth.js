@@ -16,7 +16,7 @@ const login = async (req, res) => {
       return res.status(400).send("Incorrect email address or password!");
     }
 
-    //TBC
+    //only active user/admin gets an access token
     if (existingUser.status !== "active") {
       return res.status(400).send("Cannot log in! Your profile is unverified or deleted!");
     }

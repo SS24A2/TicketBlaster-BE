@@ -7,18 +7,11 @@ const { getOneUser, updateUser, getAllUsers } = require("../../../pkg/users");
 
 const listAllUsers = async (req, res) => {
     try {
-        const account = await getOneUser({ _id: req.headers.id })
-
-        if (!account || account.role !== "admin" || account.status !== "active") {
-            return res.status(400).send("Unauthorized!");
-        }
-
         const DirPath = `${__dirname}/../../../uploads_users`;
         let filesList = []
         if (fs.existsSync(DirPath)) {
             filesList = fs.readdirSync(DirPath)
         }
-
 
         const users = await getAllUsers()
         const images = {} // key=user._id; value=img name
@@ -42,10 +35,6 @@ const getUser = async (req, res) => {
     try {
         const user = await getOneUser({ _id: req.headers.id })
 
-        if (!user || user.status !== "active") {
-            return res.status(400).send("Unauthorized!");
-        }
-
         const DirPath = `${__dirname}/../../../uploads_users`;
         let filesList = []
         if (fs.existsSync(DirPath)) {
@@ -67,12 +56,6 @@ const getUser = async (req, res) => {
 
 const changeUserRole = async (req, res) => {
     try {
-        const account = await getOneUser({ _id: req.headers.id })
-
-        if (!account || account.role !== "admin" || account.status !== "active") {
-            return res.status(400).send("Unauthorized!");
-        }
-
         const accountToUpdate = await getOneUser({ _id: req.params.id })
 
         if (!accountToUpdate || accountToUpdate.status !== "active") {
@@ -97,12 +80,6 @@ const changeUserRole = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        const account = await getOneUser({ _id: req.headers.id })
-
-        if (!account || account.role !== "admin" || account.status !== "active") {
-            return res.status(400).send("Unauthorized!");
-        }
-
         const accountToUpdate = await getOneUser({ _id: req.params.id })
 
         if (!accountToUpdate) {

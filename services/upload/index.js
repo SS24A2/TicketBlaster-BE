@@ -8,7 +8,19 @@ const api = express();
 
 api.use(fileUpload());
 
-api.post("/api/v1/upload/:type/:id", upload);
+const checkRole = (req, res, next) => {
+  if (req.params.type === "event") {
+    if (req.headers.role !== "admin") {
+      res.status(401).send({ error: "Unauthorized!!!" })
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+}
+
+api.post("/api/v1/upload/:type/:id", checkRole, upload);
 //type is event or user
 //id is event id or user id
 
