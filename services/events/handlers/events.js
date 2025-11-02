@@ -12,9 +12,9 @@ const postEvent = async (req, res) => {
     } catch (err) {
         console.error(err);
         if (err.name === "ValidationError") {
-            return res.status(422).send(err.message); //mongoose validation error (category-enum; relatedEvents-ObjectId)
+            return res.status(422).send({ error: err.message }); //mongoose validation error (category-enum; relatedEvents-ObjectId)
         }
-        return res.status(err.code || 500).send(err.error || "Internal server error"); //NIV validation error
+        return res.status(err.code || 500).send({ error: err.error || "Internal server error" }); //NIV validation error
     }
 }
 
@@ -108,18 +108,18 @@ const putEvent = async (req, res) => {
         await validateEvent(req.body, UpdateEvent)
         const response = await updateEvent(req.params.id, req.body)
         if (response.modifiedCount === 0) {
-            return res.status(400).send("The selected event is not found")
+            return res.status(400).send({ error: "The selected event is not found" })
         }
         return res.status(200).send(response)
     } catch (err) {
         console.error(err);
         if (err.name === "ValidationError") { //mongoose validation error (category-enum; relatedEvents-ObjectId)
-            return res.status(422).send(err.message);
+            return res.status(422).send({ error: err.message });
         }
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url or related events
-            return res.status(400).send("Invalid ObjectId format in the url or in the list of related events") //change message
+            return res.status(400).send({ error: "Invalid ObjectId format in the url or in the list of related events" }) //change message
         }
-        return res.status(err.code || 500).send(err.error || "Internal server error"); //NIV validation error
+        return res.status(err.code || 500).send({ error: err.error || "Internal server error" }); //NIV validation error
     }
 }
 
