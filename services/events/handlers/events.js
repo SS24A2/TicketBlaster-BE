@@ -76,7 +76,7 @@ const getEvent = async (req, res) => {
     try {
         const event = await getOneEvent({ _id: req.params.id })
         if (!event) {
-            return res.status(400).send("The selected event is not found")
+            return res.status(400).send({ error: "The selected event is not found" })
         }
 
         //get Images  
@@ -97,9 +97,9 @@ const getEvent = async (req, res) => {
     } catch (err) {
         console.error(err);
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url
-            return res.status(404).send("Requested url cannot be found")
+            return res.status(404).send({ error: "Requested url cannot be found" })
         }
-        return res.status(500).send("Internal server error")
+        return res.status(500).send({ error: "Internal server error" })
     }
 }
 
