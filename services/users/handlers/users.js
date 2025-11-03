@@ -24,10 +24,10 @@ const listAllUsers = async (req, res) => {
             images[user._id] = imgSrc
         }
 
-        return res.status(200).send({ users, images }); //TBC
+        return res.status(200).send({ users, images });
     } catch (err) {
         console.error(err);
-        return res.status(500).send("Internal Server Error!"); //TBC
+        return res.status(500).send("Internal Server Error!");
     }
 };
 
@@ -47,10 +47,10 @@ const getUser = async (req, res) => {
             image = filesList.find(item => item.slice(0, 24) === user._id.toString()) || null
         }
 
-        return res.status(200).send({ user, image }); //TBC
+        return res.status(200).send({ user, image });
     } catch (err) {
         console.error(err);
-        return res.status(500).send("Internal Server Error!"); //TBC
+        return res.status(500).send("Internal Server Error!");
     }
 };
 
@@ -74,7 +74,7 @@ const changeUserRole = async (req, res) => {
         return res.status(200).send(updatedAccount)
     } catch (err) {
         console.error(err);
-        return res.status(err.code || 500).send(err.error | "Internal Server Error!"); //TBC
+        return res.status(err.code || 500).send(err.error | "Internal Server Error!");
     }
 };
 
@@ -94,7 +94,7 @@ const deleteUser = async (req, res) => {
         return res.status(200).send("Account is deleted!")
     } catch (err) {
         console.log(err);
-        return res.status(500).send("Internal Server Error!"); //TBC
+        return res.status(500).send("Internal Server Error!");
     }
 };
 
@@ -126,7 +126,7 @@ const changeProfileInfo = async (req, res) => {
         return res.status(200).send(updatedAccount)
     } catch (err) {
         console.log(err);
-        return res.status(err.code || 500).send({ error: err.error | "Internal Server Error!" }); //TBC
+        return res.status(err.code || 500).send({ error: err.error | "Internal Server Error!" });
     }
 };
 
@@ -149,7 +149,7 @@ const changePassword = async (req, res) => {
         return res.status(200).send(updatedAccount)
     } catch (err) {
         console.log(err);
-        return res.status(err.code || 500).send({ error: err.error | "Internal Server Error!" }); //TBC
+        return res.status(err.code || 500).send({ error: err.error | "Internal Server Error!" });
     }
 };
 

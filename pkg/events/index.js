@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// da se dopolni shemata
 const eventSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -10,7 +9,6 @@ const eventSchema = new mongoose.Schema({
         type: String,
         required: true,
         enum: ['Musical Concert', 'Stand-up Comedy'],
-        message: '{VALUE} is not a supported category. Please choose Musical Concert or Stand-up Comedy.'
     },
     date: {
         type: Date,

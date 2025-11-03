@@ -13,7 +13,7 @@ app.use(cors({ origin: "http://localhost:5173" }));
 app.use(express.static('uploads_events'))
 app.use(express.static('uploads_users'))
 
-// TBC
+
 app.use(
   jwt({
     secret: config.getSection("security").jwt_secret,

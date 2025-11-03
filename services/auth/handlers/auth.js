@@ -34,7 +34,7 @@ const login = async (req, res) => {
     return res.status(200).send({ token });
   } catch (err) {
     console.error(err);
-    return res.status(err.code || 500).send(err.error || "Internal Server Error!"); //TBC
+    return res.status(err.code || 500).send(err.error || "Internal Server Error!");
   }
 };
 
@@ -78,7 +78,7 @@ const register = async (req, res) => {
   } catch (err) {
     console.error(err);
     //MailgunAPIError; NIV error ...
-    return res.status(err.code || err.status || 500).send(err.error || err.type || "Internal Server Error!"); //TBC
+    return res.status(err.code || err.status || 500).send(err.error || err.type || "Internal Server Error!");
   }
 };
 
@@ -155,7 +155,6 @@ const forgotPassword = async (req, res) => {
       return res.status(400).send("User not found!");
     }
 
-    //TBC
     if (user.status !== "active") {
       return res.status(400).send("Your profile is unverified or deleted!");
     }
@@ -181,7 +180,7 @@ const forgotPassword = async (req, res) => {
   } catch (err) {
     console.log(err);
     //MailgunAPIError; NIV error ...
-    return res.status(err.code || err.status || 500).send(err.error || err.type || "Internal Server Error!"); //TBC
+    return res.status(err.code || err.status || 500).send(err.error || err.type || "Internal Server Error!");
   }
 };
 

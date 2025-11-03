@@ -7,7 +7,7 @@ const ticketSchema = new mongoose.Schema({
     eventId: { type: mongoose.SchemaTypes.ObjectId, ref: EventModel },
     attendeeId: { type: mongoose.SchemaTypes.ObjectId, ref: UserModel },
     status: { type: String, enum: ["available", "reserved", "sold"] },
-    reservationExpiry: { type: Number }  //check Type
+    reservationExpiry: { type: Number }
 }, { timestamps: true });
 
 

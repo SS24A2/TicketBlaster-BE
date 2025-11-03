@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 
-// da se dopolni shemata
 const userSchema = new mongoose.Schema({
   email: {
     type: String,

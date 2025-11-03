@@ -1,6 +1,5 @@
 const { Validator } = require("node-input-validator");
 
-// da se dopolni shemata
 const CreateEvent = {
     name: "required|string",
     category: "required|string",

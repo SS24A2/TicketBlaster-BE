@@ -1,6 +1,5 @@
 const { Validator } = require("node-input-validator");
 
-// da se dopolni shemata
 const AccountRegister = {
   fullname: "required|string",
   email: "required|email",
