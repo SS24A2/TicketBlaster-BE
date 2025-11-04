@@ -117,7 +117,7 @@ const putEvent = async (req, res) => {
             return res.status(422).send({ error: err.message });
         }
         if (err.name === "CastError") { //mongoose error - incorect format for event id in req.url or related events
-            return res.status(400).send({ error: "Invalid ObjectId format in the url or in the list of related events" }) //change message
+            return res.status(400).send({ error: "Invalid ObjectId format in the url or in the list of related events" })
         }
         return res.status(err.code || 500).send({ error: err.error || "Internal server error" }); //NIV validation error
     }
