@@ -45,7 +45,7 @@ const register = async (req, res) => {
     const existingUser = await getOneUser({ email: email })
 
     if (existingUser && existingUser.status !== "pending") {
-      return res.status(400).send("User with this email already exists")
+      return res.status(400).send("User with this email already exists.")
     }
 
     if (confirmPassword !== password) {
@@ -152,7 +152,7 @@ const forgotPassword = async (req, res) => {
     const user = await getOneUser({ email: email });
 
     if (!user) {
-      return res.status(400).send("User not found!");
+      return res.status(400).send("Account not found!");
     }
 
     if (user.status !== "active") {
