@@ -25,14 +25,16 @@ api.post("/api/v1/upload/:type/:id", checkRole, upload);
 //id is event id or user id
 
 // PORT: 10001
-api.listen(config.getSection("services").upload.port, (err) => {
+// api.listen(config.getSection("services").upload.port, (err) => {
+api.listen(process.env.SERVICES_UPLOAD_PORT, (err) => {
   if (err) {
     console.log(err);
     return;
   }
   console.log(
     "Service [upload] successfully started on port",
-    config.getSection("services").upload.port
+    // config.getSection("services").upload.port
+    process.env.SERVICES_UPLOAD_PORT
   );
 });
 

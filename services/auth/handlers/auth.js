@@ -30,7 +30,8 @@ const login = async (req, res) => {
     }
     //req.auth contains the payload data (req.auth.fullname, req.auth.email, req.auth.id)
 
-    const token = jwt.sign(payload, config.getSection("security").jwt_secret, { expiresIn: "7 days" });
+    // const token = jwt.sign(payload, config.getSection("security").jwt_secret, { expiresIn: "7 days" });
+    const token = jwt.sign(payload, process.env.SECURITY_JWT_SECRET, { expiresIn: "7 days" });
     return res.status(200).send({ token });
   } catch (err) {
     console.error(err);
@@ -59,7 +60,8 @@ const register = async (req, res) => {
       createdDocument = await createUser({ fullname, email, password: bcrypt.hashSync(password) })
     }
 
-    const secret = config.getSection("security").jwt_secret + createdDocument.password
+    // const secret = config.getSection("security").jwt_secret + createdDocument.password
+    const secret = process.env.SECURITY_JWT_SECRET + createdDocument.password
     const payload = {
       fullname: createdDocument.fullname,
       email: createdDocument.email,
@@ -70,7 +72,8 @@ const register = async (req, res) => {
 
     const token = jwt.sign(payload, secret, { expiresIn: "24h" });
 
-    const link = `${config.getSection("links").verify}/${createdDocument._id}/${token}`
+    // const link = `${config.getSection("links").verify}/${createdDocument._id}/${token}`
+    const link = `${process.env.LINKS_VERIFY}/${createdDocument._id}/${token}`
     await sendMail(email, "VERIFICATION", {
       link
     });
@@ -92,7 +95,8 @@ const verifyAccount = async (req, res) => {
     if (user.status !== "pending") {
       return res.status(400).send({ error: "Verification completed" });
     }
-    const secret = config.getSection("security").jwt_secret + user.password;
+    // const secret = config.getSection("security").jwt_secret + user.password;
+    const secret = process.env.SECURITY_JWT_SECRET + user.password;
 
     jwt.verify(token, secret, { algorithms: ['HS256'] })
 
@@ -121,7 +125,8 @@ const resendVerificationMail = async (req, res) => {
     if (unverifiedUser.status !== "pending") {
       return res.status(400).send({ error: "Verification completed" })
     }
-    const secret = config.getSection("security").jwt_secret + unverifiedUser.password
+    // const secret = config.getSection("security").jwt_secret + unverifiedUser.password
+    const secret = process.env.SECURITY_JWT_SECRET + unverifiedUser.password
     const payload = {
       fullname: unverifiedUser.fullname,
       email: unverifiedUser.email,
@@ -132,7 +137,8 @@ const resendVerificationMail = async (req, res) => {
 
     const token = jwt.sign(payload, secret, { expiresIn: "24h" });
 
-    const link = `${config.getSection("links").verify}/${unverifiedUser._id}/${token}`
+    // const link = `${config.getSection("links").verify}/${unverifiedUser._id}/${token}`
+    const link = `${process.env.LINKS_VERIFY}/${unverifiedUser._id}/${token}`
     await sendMail(unverifiedUser.email, "VERIFICATION", {
       link
     });
@@ -159,7 +165,8 @@ const forgotPassword = async (req, res) => {
       return res.status(400).send("Your profile is unverified or deleted!");
     }
 
-    const secret = config.getSection("security").jwt_secret + user.password;
+    // const secret = config.getSection("security").jwt_secret + user.password;
+    const secret = process.env.SECURITY_JWT_SECRET + user.password;
     const payload = {
       fullname: user.fullname,
       email: user.email,
@@ -170,7 +177,8 @@ const forgotPassword = async (req, res) => {
 
     const token = jwt.sign(payload, secret, { expiresIn: "15m" });
 
-    const link = `${config.getSection("links").reset_password}/${user._id}/${token}`
+    // const link = `${config.getSection("links").reset_password}/${user._id}/${token}`
+    const link = `${process.env.LINKS_RESET_PASSWORD}/${user._id}/${token}`
 
     await sendMail(email, "PASSWORD_RESET", {
       fullname: user.fullname,
@@ -191,7 +199,8 @@ const resetPasswordLinkCheck = async (req, res) => {
     if (!user) {
       return res.status(400).send({ error: "User not found!" });
     }
-    const secret = config.getSection("security").jwt_secret + user.password;
+    // const secret = config.getSection("security").jwt_secret + user.password;
+    const secret = process.env.SECURITY_JWT_SECRET + user.password;
 
     jwt.verify(token, secret, { algorithms: ['HS256'] })
 
@@ -222,7 +231,8 @@ const resetPassword = async (req, res) => {
       return res.status(400).send({ error: "User not found!" });
     }
 
-    const secret = config.getSection("security").jwt_secret + user.password;
+    // const secret = config.getSection("security").jwt_secret + user.password;
+    const secret = process.env.SECURITY_JWT_SECRET + user.password;
 
     jwt.verify(token, secret, { algorithms: ['HS256'] })
 

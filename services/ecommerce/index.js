@@ -18,13 +18,15 @@ api.get("/api/v1/ecommerce/tickets/history", viewTicketsHistory);
 api.get("/api/v1/ecommerce/tickets/print", printTickets);
 
 // Port 10003
-api.listen(config.getSection("services").ecommerce.port, (err) => {
+// api.listen(config.getSection("services").ecommerce.port, (err) => {
+api.listen(process.env.SERVICES_ECOMMERCE_PORT, (err) => {
   if (err) {
     console.log("error", err);
     return;
   }
   console.log(
     "Service [ecommerce] successfully started on port",
-    config.getSection("services").ecommerce.port
+    // config.getSection("services").ecommerce.port
+    process.env.SERVICES_ECOMMERCE_PORT
   );
 });

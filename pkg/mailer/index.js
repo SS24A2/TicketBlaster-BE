@@ -32,7 +32,8 @@ const mailTemplates = {
 const sendMail = async (to, type, data, ticketsIdArray) => {
     try {
         if (!mg) {
-            mg = mailgun.client({ username: "api", key: config.getSection("mailgun").api_key })
+            // mg = mailgun.client({ username: "api", key: config.getSection("mailgun").api_key })
+            mg = mailgun.client({ username: "api", key: process.env.MAILGUN_API_KEY })
         }
 
         const title = mailTemplates[type].title;
@@ -42,7 +43,8 @@ const sendMail = async (to, type, data, ticketsIdArray) => {
         content = await ejs.renderFile(templatePath, { data })
 
         let messageParams = {
-            from: `${config.getSection("mailgun").sender_email} <mailgun@${config.getSection("mailgun").domain}>`,
+            // from: `${config.getSection("mailgun").sender_email} <mailgun@${config.getSection("mailgun").domain}>`,
+            from: `${process.env.MAILGUN_SENDER_EMAIL} <mailgun@${process.env.MAIGUN_DOMAIN}>`,
             to: to,
             subject: title,
             html: content,
@@ -78,7 +80,8 @@ const sendMail = async (to, type, data, ticketsIdArray) => {
             messageParams.inline = [file1, file2, file3];
         }
 
-        return await mg.messages.create(config.getSection("mailgun").domain, messageParams);
+        // return await mg.messages.create(config.getSection("mailgun").domain, messageParams);
+        return await mg.messages.create(process.env.MAIGUN_DOMAIN, messageParams);
     } catch (err) {
         throw err;
     }

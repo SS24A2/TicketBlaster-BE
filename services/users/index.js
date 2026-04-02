@@ -19,14 +19,16 @@ api.put("/api/v1/users/role/:id", checkRole, changeUserRole);
 api.put("/api/v1/users/status/:id", checkRole, deleteUser);
 
 
-api.listen(config.getSection("services").users.port, (err) => {
+// api.listen(config.getSection("services").users.port, (err) => {
+api.listen(process.env.SERVICES_USERS_PORT, (err) => {
     if (err) {
         console.log(err);
         return;
     }
     console.log(
         "Service [users] successfully started on port",
-        config.getSection("services").users.port
+        // config.getSection("services").users.port
+        process.env.SERVICES_USERS_PORT
     );
 });
 

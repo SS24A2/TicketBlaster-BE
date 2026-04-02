@@ -16,7 +16,8 @@ app.use(express.static('uploads_users'))
 
 app.use(
   jwt({
-    secret: config.getSection("security").jwt_secret,
+    // secret: config.getSection("security").jwt_secret,
+    secret: process.env.SECURITY_JWT_SECRET,
     algorithms: ["HS256"],
   }).unless({
     path: [
@@ -125,10 +126,12 @@ app.use(
 
 // http://localhost:8080/api/v1/users
 
-app.listen(config.getSection("services").proxy.port, (err) => {
+// app.listen(config.getSection("services").proxy.port, (err) => {
+app.listen(process.env.SERVICES_PROXY_PORT, (err) => {
   if (err) {
     console.log(err);
     return err;
   }
-  console.log("Service [proxy] successfully started on port", config.getSection("services").proxy.port);
+  // console.log("Service [proxy] successfully started on port", config.getSection("services").proxy.port);
+  console.log("Service [proxy] successfully started on port", process.env.SERVICES_PROXY_PORT);
 });

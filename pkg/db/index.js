@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const config = require("../config");
+require('dotenv').config()
 
 const init = () => {
   const url = config.getSection("db").url;
@@ -12,8 +13,8 @@ const init = () => {
   const dbname = config.getSection("db").dbname;
   const username = config.getSection("db").username;
   const password = config.getSection("db").password;
-  const dsn = `mongodb+srv://${username}:${password}@cluster0.im0jw.mongodb.net/${dbname}?retryWrites=true&w=majority&appName=Cluster0`;
-
+  // const dsn = `mongodb+srv://${username}:${password}@cluster0.im0jw.mongodb.net/${dbname}?retryWrites=true&w=majority&appName=Cluster0`;
+  const dsn = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster0.im0jw.mongodb.net/${process.env.DB_DBNAME}?retryWrites=true&w=majority&appName=Cluster0`;
   mongoose
     .connect(dsn)
     .then((res) => console.log("DB connected!"))

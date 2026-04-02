@@ -22,13 +22,15 @@ api.put("/api/v1/events/:id", checkRole, putEvent);
 api.delete("/api/v1/events/:id", checkRole, deleteOneEvent);
 
 // Port 10004
-api.listen(config.getSection("services").events.port, (err) => {
+// api.listen(config.getSection("services").events.port, (err) => {
+api.listen(process.env.SERVICES_EVENTS_PORT, (err) => {
     if (err) {
         console.log("error", err);
         return;
     }
     console.log(
         "Service [events] successfully started on port",
-        config.getSection("services").events.port
+        // config.getSection("services").events.port
+        process.env.SERVICES_EVENTS_PORT
     );
 });

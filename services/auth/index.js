@@ -17,14 +17,16 @@ api.put("/api/v1/auth/resetPassword/:id/:token", auth.resetPassword);
 api.get("/api/v1/auth/verify/:id/:token", auth.verifyAccount);
 api.get("/api/v1/auth/verifyResend/:id", auth.resendVerificationMail);
 
-api.listen(config.getSection("services").auth.port, (err) => {
+// api.listen(config.getSection("services").auth.port, (err) => {
+api.listen(process.env.SERVICES_AUTH_PORT, (err) => {
   if (err) {
     console.log(err);
     return;
   }
   console.log(
     "Service [auth] successfully started on port",
-    config.getSection("services").auth.port
+    // config.getSection("services").auth.port
+    process.env.SERVICES_AUTH_PORT
   );
 });
 
