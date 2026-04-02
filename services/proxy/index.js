@@ -9,7 +9,8 @@ const config = require("../../pkg/config");
 const app = express();
 
 // app.use(cors({ origin: "http://localhost:5173" }));
-app.use(cors({ origin: "https://ticket-blaster-fe.vercel.app" }));
+// app.use(cors({ origin: "https://ticket-blaster-fe.vercel.app" }));
+app.use(cors());
 
 
 app.use(express.static('uploads_events'))
