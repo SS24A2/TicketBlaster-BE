@@ -93,7 +93,7 @@ app.use(
 
 app.use(
   "/api/v1/events",
-  proxy("http://127.0.0.1:10004", {
+  proxy("https://ticket-blaster-be-75bt.vercel.app", {
     proxyReqOptDecorator: function (proxyReqOpts, srcReq) {
       proxyReqOpts.headers = { ...proxyReqOpts.headers, ...srcReq.auth };
       return proxyReqOpts;
