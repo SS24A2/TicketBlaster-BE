@@ -2,12 +2,14 @@ const express = require("express");
 const proxy = require("express-http-proxy");
 const cors = require("cors");
 const { expressjwt: jwt } = require("express-jwt");
+require('dotenv').config()
 
 const config = require("../../pkg/config");
 
 const app = express();
 
-app.use(cors({ origin: "http://localhost:5173" }));
+// app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: "https://ticket-blaster-fe.vercel.app/" }));
 
 
 app.use(express.static('uploads_events'))

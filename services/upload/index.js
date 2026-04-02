@@ -1,5 +1,6 @@
 const express = require("express");
 const fileUpload = require("express-fileupload");
+require('dotenv').config()
 
 const config = require("../../pkg/config");
 const { upload } = require("./handlers/upload");
